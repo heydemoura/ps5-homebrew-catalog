@@ -145,21 +145,44 @@ jobs:
         with:
           name: scans
           path: scans
+      - name: Choose where the site is published
+        # The official repository publishes prosperostore.net at the root of its Pages site. A
+        # fork publishes its own Pages site under its repository's path, the address a store
+        # reads it from (https://<owner>.github.io/<repository>/api/v1/), and may do so
+        # unsigned: a fork has no key the consoles know, so a store reads it with signature
+        # checks off.
+        run: |
+          if [[ $GITHUB_REPOSITORY == darkxex/ps5-homebrew-catalog ]]; then
+            echo "SITE_URL=https://prosperostore.net" >> "$GITHUB_ENV"
+            echo "SITE_BASE=/" >> "$GITHUB_ENV"
+            echo "SITE_ROOT=site-build" >> "$GITHUB_ENV"
+            echo "SIGN_REQUIRE=--require" >> "$GITHUB_ENV"
+          else
+            echo "SITE_URL=https://${OWNER}.github.io" >> "$GITHUB_ENV"
+            echo "SITE_BASE=/${REPOSITORY}/" >> "$GITHUB_ENV"
+            echo "SITE_ROOT=site-build/${REPOSITORY}" >> "$GITHUB_ENV"
+            echo "SIGN_REQUIRE=" >> "$GITHUB_ENV"
+          fi
       - name: Build the website
         run: >-
           python3 -m catalog build --out site-build --icon-cache .icon-cache --scans scans
-          --site-url https://prosperostore.net --base /
+          --site-url "$SITE_URL" --base "$SITE_BASE"
         env:
           GITHUB_TOKEN: ${{ github.token }}   # read-only: raises the API rate limit for release facts
       - name: Sign the store API
-        # The only steps that see the signing key. They fail rather than publish a catalog
-        # that consoles would refuse: unsigned, or signed with a key that isn't in keys/.
-        run: python3 -m catalog sign --out site-build --base / --require
+        # The only steps that see the signing key. The official repository fails rather than
+        # publish a catalog that consoles would refuse: unsigned, or signed with a key that
+        # isn't in keys/. A fork without a key publishes unsigned.
+        run: python3 -m catalog sign --out site-build --base "$SITE_BASE" $SIGN_REQUIRE
         env:
           CATALOG_SIGNING_KEY: ${{ secrets.CATALOG_SIGNING_KEY }}
+      - name: Keep what the Pages site serves
+        run: |
+          mv "$SITE_ROOT" pages
+          touch pages/.nojekyll
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
-          path: site-build
+          path: pages
 
 
   pages:
