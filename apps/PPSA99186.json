@@ -1,14 +1,14 @@
 {
   "titleid": "PPSA99186",
-  "name": "ProsperoEden Switch UI",
+  "name": "ForgeNX – Switch Emulator",
   "kind": "app",
   "category": "emulators",
-  "description": "An independent Switch-inspired PS5 interface edition of BlackBearReloaded's ProsperoEden emulator.",
+  "description": "An independent Nintendo Switch emulator for PS5 based on ProsperoEden, featuring a redesigned launcher, customizable themes, and game library navigation.",
   "license": "GPL-3.0",
   "author": "KernelForgeLabs",
-  "version": null,
-  "source_repo": null,
-  "artifact_url": null,
-  "sha256": null,
-  "icon_url": null
+  "version": "v6.000.000",
+  "source_repo": "https://github.com/KernelForgeLabs/ProsperoEden-Switch-UI",
+  "artifact_url": "https://github.com/KernelForgeLabs/ProsperoEden-Switch-UI/releases/download/v6.000.000/ProsperoEden-v6.000.000.zip",
+  "sha256": "e18ce297a1834f98e4faad58f83f03b064b797d956ccc46138b5a8ad257399a3",
+  "icon_url": "https://raw.githubusercontent.com/KernelForgeLabs/ProsperoEden-Switch-UI/v6.000.000/sce_sys/icon0.png"
 }

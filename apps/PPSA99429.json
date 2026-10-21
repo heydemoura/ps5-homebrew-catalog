@@ -1,9 +1,9 @@
 {
   "titleid": "PPSA99429",
-  "name": "APRICOT",
+  "name": "ApricotGS",
   "kind": "game",
   "category": "console-ports",
-  "description": "Native PS5 port for two related RPG editions; private startup and early save/load work, while full gameplay, edition selection and link trading remain in development; use your own game data.",
+  "description": "Native PS5 player for two RPG editions with 3D selection and early private gameplay. Public preparation and release are in progress; users supply their own game data.",
   "license": null,
   "author": "BaZZtian",
   "version": null,

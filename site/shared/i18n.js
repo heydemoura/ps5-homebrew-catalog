@@ -21,7 +21,8 @@
     ["pt", "🇧🇷", "Português"],
     ["ja", "🇯🇵", "日本語"],
     ["de", "🇩🇪", "Deutsch"],
-    ["nl", "🇳🇱", "Nederlands"]
+    ["nl", "🇳🇱", "Nederlands"],
+    ["tr", "🇹🇷", "Türkçe"]
   ];
   var KEY = "catalog-lang";
   var SHADOW = '<a href="https://github.com/drakmor/ShadowMountPlus">ShadowMountPlus</a>';
@@ -43,6 +44,7 @@
       "foot.fine": "Lists native PS5 homebrew apps only. Community-run and not affiliated with Sony Interactive Entertainment. Downloads come from each developer's own GitHub release; this site doesn't host them. Each developer is solely responsible for their app's licensing and content. Listings are provided as-is, without warranty, and a listing is not a security audit. <a href=\"{repo}#disclaimer\">Disclaimer</a> · Maintained by <a href=\"https://github.com/darkxex\">darkxex</a>, created by <a href=\"https://github.com/blackbearreloaded\">BlackBearReloaded</a> · Built from <a href=\"{repo}/commit/{commit}\">{short}</a>",
       "foot.updated": " · last updated {time} UTC",
       "lang.label": "Language",
+      "translate.original": "Show original", "translate.translated": "Show translation",
       "stage.details": "View details", "stage.new": "New release", "stage.featured": "Featured",
       "heading.home": "PS5 homebrew", "heading.results": "Results for “{q}”",
       "title.home": "PS5 Homebrew Store — community apps, games and tools", "title.suffix": "PS5 Homebrew Store", "title.search": "Search",
@@ -133,6 +135,7 @@
       "foot.fine": "Solo incluye apps homebrew nativas de PS5. Gestionado por la comunidad y sin relación con Sony Interactive Entertainment. Las descargas provienen de la release de GitHub de cada desarrollador; este sitio no las aloja. Cada desarrollador es el único responsable de la licencia y el contenido de su app. Los listados se ofrecen tal cual, sin garantía, y un listado no es una auditoría de seguridad. <a href=\"{repo}#disclaimer\">Aviso legal</a> · Mantenido por <a href=\"https://github.com/darkxex\">darkxex</a>, creado por <a href=\"https://github.com/blackbearreloaded\">BlackBearReloaded</a> · Compilado desde <a href=\"{repo}/commit/{commit}\">{short}</a>",
       "foot.updated": " · última actualización {time} UTC",
       "lang.label": "Idioma",
+      "translate.original": "Mostrar original", "translate.translated": "Mostrar traducción",
       "stage.details": "Ver detalles", "stage.new": "Nueva versión", "stage.featured": "Destacado",
       "heading.home": "Homebrew de PS5", "heading.results": "Resultados para “{q}”",
       "title.home": "PS5 Homebrew Store — apps, juegos y herramientas de la comunidad", "title.suffix": "PS5 Homebrew Store", "title.search": "Búsqueda",
@@ -223,6 +226,7 @@
       "foot.fine": "Ne répertorie que des apps homebrew natives pour PS5. Géré par la communauté et sans lien avec Sony Interactive Entertainment. Les téléchargements proviennent de la release GitHub de chaque développeur ; ce site ne les héberge pas. Chaque développeur est seul responsable de la licence et du contenu de son app. Les fiches sont fournies telles quelles, sans garantie, et une fiche n'est pas un audit de sécurité. <a href=\"{repo}#disclaimer\">Avertissement</a> · Maintenu par <a href=\"https://github.com/darkxex\">darkxex</a>, créé par <a href=\"https://github.com/blackbearreloaded\">BlackBearReloaded</a> · Construit depuis <a href=\"{repo}/commit/{commit}\">{short}</a>",
       "foot.updated": " · dernière mise à jour {time} UTC",
       "lang.label": "Langue",
+      "translate.original": "Afficher l'original", "translate.translated": "Afficher la traduction",
       "stage.details": "Voir les détails", "stage.new": "Nouvelle version", "stage.featured": "À la une",
       "heading.home": "Homebrew PS5", "heading.results": "Résultats pour « {q} »",
       "title.home": "PS5 Homebrew Store — apps, jeux et outils de la communauté", "title.suffix": "PS5 Homebrew Store", "title.search": "Recherche",
@@ -313,6 +317,7 @@
       "foot.fine": "Lista apenas apps homebrew nativos de PS5. Mantido pela comunidade e sem vínculo com a Sony Interactive Entertainment. Os downloads vêm da release do GitHub de cada desenvolvedor; este site não os hospeda. Cada desenvolvedor é o único responsável pela licença e pelo conteúdo do seu app. As listagens são fornecidas no estado em que se encontram, sem garantia, e uma listagem não é uma auditoria de segurança. <a href=\"{repo}#disclaimer\">Aviso legal</a> · Mantido por <a href=\"https://github.com/darkxex\">darkxex</a>, criado por <a href=\"https://github.com/blackbearreloaded\">BlackBearReloaded</a> · Gerado a partir de <a href=\"{repo}/commit/{commit}\">{short}</a>",
       "foot.updated": " · última atualização {time} UTC",
       "lang.label": "Idioma",
+      "translate.original": "Mostrar original", "translate.translated": "Mostrar tradução",
       "stage.details": "Ver detalhes", "stage.new": "Nova versão", "stage.featured": "Destaque",
       "heading.home": "Homebrew de PS5", "heading.results": "Resultados para “{q}”",
       "title.home": "PS5 Homebrew Store — apps, jogos e ferramentas da comunidade", "title.suffix": "PS5 Homebrew Store", "title.search": "Busca",
@@ -403,6 +408,7 @@
       "foot.fine": "PS5ネイティブのホームブリューアプリのみを掲載しています。コミュニティ運営であり、Sony Interactive Entertainment とは関係ありません。ダウンロードは各開発者のGitHubリリースから提供され、このサイトでは配布していません。アプリのライセンスと内容の責任は各開発者が単独で負います。掲載内容は現状有姿で提供され、保証はなく、掲載はセキュリティ監査ではありません。<a href=\"{repo}#disclaimer\">免責事項</a> · 保守: <a href=\"https://github.com/darkxex\">darkxex</a>、作成: <a href=\"https://github.com/blackbearreloaded\">BlackBearReloaded</a> · ビルド元: <a href=\"{repo}/commit/{commit}\">{short}</a>",
       "foot.updated": " · 最終更新 {time} UTC",
       "lang.label": "言語",
+      "translate.original": "原文を表示", "translate.translated": "翻訳を表示",
       "stage.details": "詳細を見る", "stage.new": "新リリース", "stage.featured": "注目",
       "heading.home": "PS5 ホームブリュー", "heading.results": "「{q}」の検索結果",
       "title.home": "PS5 Homebrew Store — コミュニティのアプリ、ゲーム、ツール", "title.suffix": "PS5 Homebrew Store", "title.search": "検索",
@@ -493,6 +499,7 @@
       "foot.fine": "Listet nur native PS5-Homebrew-Apps. Von der Community betrieben und nicht mit Sony Interactive Entertainment verbunden. Die Downloads stammen aus dem GitHub-Release des jeweiligen Entwicklers; diese Seite hostet sie nicht. Jeder Entwickler ist allein für Lizenz und Inhalt seiner App verantwortlich. Einträge werden ohne Gewähr bereitgestellt, und ein Eintrag ist kein Sicherheitsaudit. <a href=\"{repo}#disclaimer\">Haftungsausschluss</a> · Betreut von <a href=\"https://github.com/darkxex\">darkxex</a>, erstellt von <a href=\"https://github.com/blackbearreloaded\">BlackBearReloaded</a> · Erstellt aus <a href=\"{repo}/commit/{commit}\">{short}</a>",
       "foot.updated": " · zuletzt aktualisiert {time} UTC",
       "lang.label": "Sprache",
+      "translate.original": "Original anzeigen", "translate.translated": "Übersetzung anzeigen",
       "stage.details": "Details ansehen", "stage.new": "Neues Release", "stage.featured": "Empfohlen",
       "heading.home": "PS5-Homebrew", "heading.results": "Ergebnisse für „{q}“",
       "title.home": "PS5 Homebrew Store — Apps, Spiele und Tools der Community", "title.suffix": "PS5 Homebrew Store", "title.search": "Suche",
@@ -582,6 +589,7 @@
       "foot.fine": "Bevat alleen native PS5-homebrew-apps. Beheerd door de community en niet verbonden aan Sony Interactive Entertainment. Downloads komen uit de eigen GitHub-release van elke ontwikkelaar; deze site host ze niet. Elke ontwikkelaar is zelf verantwoordelijk voor de licentie en inhoud van zijn of haar app. Vermeldingen worden geleverd zoals ze zijn, zonder garantie, en een vermelding is geen beveiligingsaudit. <a href=\"{repo}#disclaimer\">Disclaimer</a> · Onderhouden door <a href=\"https://github.com/darkxex\">darkxex</a>, gemaakt door <a href=\"https://github.com/blackbearreloaded\">BlackBearReloaded</a> · Gebouwd vanuit <a href=\"{repo}/commit/{commit}\">{short}</a>",
       "foot.updated": " · laatst bijgewerkt {time} UTC",
       "lang.label": "Taal",
+      "translate.original": "Origineel tonen", "translate.translated": "Vertaling tonen",
       "stage.details": "Details bekijken", "stage.new": "Nieuwe release", "stage.featured": "Uitgelicht",
       "heading.home": "PS5-homebrew", "heading.results": "Resultaten voor “{q}”",
       "title.home": "PS5 Homebrew Store — apps, games en tools van de community", "title.suffix": "PS5 Homebrew Store", "title.search": "Zoeken",
@@ -656,6 +664,97 @@
       "tv.cm.first.open": "Nog geen reacties. Om de eerste te schrijven, of om deze app te liken, open je {url} op je telefoon: de discussie van de app op GitHub opent, waar een GitHub-account nodig is.",
       "tv.qr": "QR-code voor {address}",
       "tv.nojs": "De TV-modus heeft JavaScript nodig. <a href=\"{base}\">Open de gewone catalogus</a>."
+    },
+
+    tr: {
+      "brand.from": "PS5 kataloğu",
+      "skip": "İçeriğe geç", "nav.sections": "Bölümler",
+      "tab.discover": "Keşfet", "tab.apps": "Uygulamalar", "tab.games": "Oyunlar", "tab.tools": "Araçlar", "tab.soon": "Yakında", "tab.all": "Tümü",
+      "search.label": "Uygulama ara", "search.placeholder": "Ara",
+      "link.tv": "TV modu", "link.submit": "Uygulama gönder",
+      "notice.tag": "Yeni",
+      "notice.text": "<strong>ProsperoStore yayında.</strong> Bu katalogdaki tüm uygulamalara doğrudan PS5'inizden göz atın, onları yükleyin ve güncelleyin. Şu an alfa sürümünde.",
+      "notice.go": "GitHub'dan edinin",
+      "foot.catalog": "Katalog", "foot.publish": "Uygulama yayınla", "foot.policy": "İnceleme politikası", "foot.report": "Uygulama bildir",
+      "foot.feed": "JSON akışı", "foot.source": "Kaynak kodu",
+      "foot.fine": "Yalnızca yerel PS5 homebrew uygulamalarını listeler. Topluluk tarafından yürütülür ve Sony Interactive Entertainment ile hiçbir bağlantısı yoktur. İndirmeler her geliştiricinin kendi GitHub sürümünden gelir; bu site dosyaları barındırmaz. Her geliştirici, uygulamasının lisansından ve içeriğinden tek başına sorumludur. Listelenen uygulamalar olduğu gibi, hiçbir garanti olmaksızın sunulur ve listelenmek bir güvenlik denetimi anlamına gelmez. <a href=\"{repo}#disclaimer\">Sorumluluk reddi</a> · Bakım: <a href=\"https://github.com/darkxex\">darkxex</a>, oluşturan: <a href=\"https://github.com/blackbearreloaded\">BlackBearReloaded</a> · Derleme: <a href=\"{repo}/commit/{commit}\">{short}</a>",
+      "foot.updated": " · son güncelleme {time} UTC",
+      "lang.label": "Dil",
+      "translate.original": "Orijinali göster", "translate.translated": "Çeviriyi göster",
+      "stage.details": "Ayrıntıları gör", "stage.new": "Yeni sürüm", "stage.featured": "Öne çıkan",
+      "heading.home": "PS5 homebrew", "heading.results": "“{q}” için sonuçlar",
+      "title.home": "PS5 Homebrew Store — topluluk uygulamaları, oyunları ve araçları", "title.suffix": "PS5 Homebrew Store", "title.search": "Arama",
+      "sort.title": "Sıralamayı değiştir", "sort.by": "Sıralama: ", "order.name": "Ad", "order.updated": "Son güncellenen", "order.liked": "En beğenilen", "order.author": "Geliştirici",
+      "empty.title": "Sonuç yok", "empty.text": "Başka bir uygulama ya da geliştirici adı deneyin.",
+      "cats.label": "Kategoriler", "cats.all": "Tümü",
+      "shelf.new": "Katalogda yeni", "shelf.updated": "Son güncellenenler", "shelf.changed": "Yeni ve güncellenenler", "shelf.liked": "En beğenilenler",
+      "shelf.all": "Tümünü gör", "shelf.prev": "{title}: öncekiler", "shelf.next": "{title}: devamı",
+      "n.likes": ["{n} beğeni", "{n} beğeni"], "n.comments": ["{n} yorum", "{n} yorum"], "n.apps": ["{n} uygulama", "{n} uygulama"],
+      "stats.aria": "{likes}, {comments}",
+      "copy": "Kopyala", "copied": "Kopyalandı",
+      "comments.someone": "biri", "comments.readall": "Tüm yorumları GitHub'da okuyun ({n})",
+      "app.back": "Tüm uygulamalar", "app.updated": "Güncellendi", "app.reserved": "Ayrıldı", "app.facts": "Sürüm bilgileri", "app.status": "Durum",
+      "app.like": "Beğen", "app.comment": "Yorum yap", "app.shared": "Kimlik benzersiz değil",
+      "app.sharednote": "<code>{titleid}</code> Title ID'siyle listelenmiş başka bir uygulama daha var: {links}. Bir konsol her Title ID için yalnızca bir uygulama tutar; bu yüzden bunu yüklemek diğerinin yerini alır ve ikisi aynı kayıt verilerini paylaşır.",
+      "comments.title": "Yorumlar", "comments.none": "Henüz yorum yok. <a data-comments-link href=\"{href}\">İlk yorumu GitHub'da siz yazın</a>.",
+      "comments.more": "GitHub'da yorum yap",
+      "install.title": "Yükleme",
+      "install.note": "Önce <a href=\"{release}\">sürüm notlarını</a> ve <a href=\"{repo}\">projenin belgelerini</a> okuyun. Bazı uygulamalar payload, yapılandırma ya da ek dosyalar gibi ek kurulum gerektirir; geliştiricinin talimatları aşağıdaki genel adımlardan önce gelir.",
+      "step.zip.1": "<code>{file}</code> dosyasını indirin ve bilgisayarınızda arşivden çıkarın.",
+      "step.zip.2": "Çıkardığınız <code>{titleid}/</code> klasörünü PS5'inizdeki <code>/data/homebrew/</code> klasörüne kopyalayın; örneğin FTP ile.",
+      "step.zip.3": SHADOW + " gibi bir yükleyici klasörü algılar. {name} uygulamasını ana ekrandan başlatın.",
+      "step.img.1": "<code>{file}</code> dosyasını indirin.",
+      "step.img.2": "Dosyayı olduğu gibi PS5'inizdeki <code>/data/homebrew/</code> klasörüne kopyalayın; örneğin FTP ile.",
+      "step.img.3": SHADOW + " imajı bağlar. {name} uygulamasını ana ekrandan başlatın.",
+      "verify.title": "Doğrula", "verify.text": "Bu listeleme tek ve belirli bir dosyaya sabitlenmiştir. <code>sha256sum {file}</code> komutu şu çıktıyı vermelidir:",
+      "verify.note": "Bu uygulamanın ve içeriğinin sorumluluğu geliştiricisine aittir: {author}. Homebrew, jailbreak yapılmış bir konsolda yükseltilmiş yetkilerle çalışır; yalnızca güvendiğiniz şeyleri yükleyin.",
+      "source.title": "Kaynak", "source.release": "Sürüm {tag}",
+      "details.title": "Ayrıntılar", "d.titleid": "Title ID", "d.category": "Kategori", "d.version": "Sürüm", "d.format": "Biçim", "d.license": "Lisans",
+      "d.file": "Dosya", "d.updated": "Güncellendi", "d.status": "Durum", "d.reserved": "Ayrıldı", "d.source": "Kaynak", "d.likes": "Beğeniler", "d.comments": "Yorumlar",
+      "panel.kicker": "Bu uygulamayı edinin", "panel.ready": "Hazır", "panel.note": "Doğrudan geliştiricinin GitHub sürümünden",
+      "panel.download": "İndir", "panel.source": "Kaynak kodu",
+      "panel.reason": "SHA-256 değeriyle tek ve belirli bir dosyaya sabitlenmiştir. Yüklemeden önce karşılaştırın.",
+      "panel.get": "Bu uygulamayı edinin", "store.q": "PS5'inizde mi?", "store.text": "ProsperoStore ile koltuğunuzdan kalkmadan yükleyin ve güncelleyin.",
+      "soon.title": "Henüz yayımlanmadı",
+      "soon.text": "{author}, bu {kind} için <code>{titleid}</code> Title ID'sini ayırdı. İlk sürüm listelendiğinde indirme bağlantısı, kaynak kodu ve simgesi burada görünecek.",
+      "soon.note": "Henüz hiçbir sürüm yayımlanmadı", "soon.later": "Yayımlandığında burada görünecek.",
+      "notes.title": "Sürüm notları", "notes.source": "{author} tarafından {version} için yazıldı. ", "notes.full": "Notların tamamını GitHub'da okuyun", "notes.see": "Bu sürümü GitHub'da görün",
+      "safety.title": "Güvenlik", "safety.aria": "Tarama sonuçları",
+      "sb.stays": "Sandbox içinde kalıyor", "sb.stays.text": "Tarama, bu uygulamanın kendi dosyalarının dışına çıkmasını sağlayacak bir yol bulmadı: payload yok, payload yükleyicisine bağlantı yok, jailbreak hizmetine istek yok.",
+      "sb.leaves": "Sandbox dışına çıkıyor", "sb.leaves.text": "Bu uygulama konsola tam erişim elde edebilir; bu genellikle kendi klasörünün dışındaki dosyaları okumak ve yazmak içindir. Yalnızca geliştiricisine güveniyorsanız yükleyin.",
+      "sb.unclear": "Sandbox: belirsiz", "sb.unclear.text": "Tarama, bu uygulamanın payload yükleyicisine erişebileceğine dair zayıf işaretler buldu ancak kesin bir sonuca varamadı.",
+      "helpers.unrev": ["{n} yardımcı program incelenmedi", "{n} yardımcı program incelenmedi"],
+      "helpers.unrev.text": ["Sandbox dışında çalışan {n} yardımcı program içeriyor; bunların {u} tanesi katalog yöneticileri tarafından okunmadı.", "Sandbox dışında çalışan {n} yardımcı program içeriyor; bunların {u} tanesi katalog yöneticileri tarafından okunmadı."],
+      "helpers.ok": "Yardımcı programlar incelendi",
+      "helpers.ok.text": ["Sandbox dışında çalışan {n} yardımcı program içeriyor; bu program kataloğun incelenmiş yardımcı programlar listesinde yer alıyor.", "Sandbox dışında çalışan {n} yardımcı program içeriyor; hepsi kataloğun incelenmiş yardımcı programlar listesinde yer alıyor."],
+      "build.attested": "GitHub Actions ile derlendi", "build.attested.text": "GitHub, uygulamanın deposundaki bir iş akışının (workflow) tam olarak bu dosyayı derlediğine dair imzalı bir beyan tutuyor.",
+      "build.workflow": "Bir iş akışıyla yayımlandı", "build.workflow.text": "Uygulamanın deposundaki bir iş akışı (workflow) bu dosyayı sürüme ekledi. Nerede derlendiğini kanıtlayan bir şey yok.",
+      "build.developer": "Geliştirici tarafından derlendi", "build.developer.text": "Geliştirici bu dosyayı elle derleyip yükledi. Dosyayı yayımlanan kaynak koduna bağlayan bir şey yok.",
+      "safety.source": "Sürüm dosyasının otomatik taramasından elde edildi; dosya yalnızca okunur, asla çalıştırılmaz. Tarama bazı şeyleri gözden kaçırabilir: bir garanti değildir. " + SCAN + "Tarama nasıl çalışır?</a>",
+      "lost.kicker": "Hata 404", "lost.title": "Bu rafta hiçbir şey yok", "lost.text": "Bu sayfa katalogda yok. Uygulamanın adı değişmiş ya da uygulama kaldırılmış olabilir.",
+      "fmt.zip": "ZIP klasörü", "fmt.ffpkg": "FFPKG imajı", "fmt.ffpfsc": "FFPFSC imajı",
+      "kind.app": "Uygulama", "kind.game": "Oyun", "kind.tool": "Araç",
+      "kindlc.app": "uygulama", "kindlc.game": "oyun", "kindlc.tool": "araç",
+      "unlicensed": "Lisanssız",
+      "cat.console-ports": "Konsol oyunu portları", "cat.pc-ports": "PC oyunu portları", "cat.homebrew-games": "Homebrew oyunlar", "cat.emulators": "Emülatörler",
+      "cat.streaming": "Oyun akışı", "cat.video": "Video ve TV", "cat.music": "Müzik ve ses", "cat.ai": "Yapay zekâ", "cat.utilities": "Yardımcı araçlar",
+      "cat.tools": "Araçlar ve testler", "cat.showcases": "Demolar",
+      "tv.title": "PS5 Homebrew — TV", "tv.sort": "Sıralama", "tv.exit": "TV modundan çık", "tv.cats": "Kategoriler", "tv.empty": "Burada henüz bir şey yok.",
+      "tv.soonbadge": "Yakında", "tv.by": "{author} tarafından", "tv.of": "{i} / {total}",
+      "tv.sortedby": "{count} · sıralama: {sort}",
+      "tv.hint.move": "Gezin", "tv.hint.open": "Aç", "tv.hint.back": "Geri", "tv.hint.sort": "Sırala", "tv.hint.menu": "Menü",
+      "tv.hint.changesort": "Sıralamayı değiştir", "tv.hint.exit": "Çık", "tv.hint.browse": "Göz at", "tv.hint.language": "Dili değiştir", "tv.hint.detail": "Önceki / sonraki · kaydır",
+      "tv.credit": "Bakım: darkxex, oluşturan: BlackBearReloaded · Derleme: {short}",
+      "tv.reserved": "Bu Title ID geliştiricisi tarafından ayrıldı. Uygulama henüz yayımlanmadı; yayımlandığında indirme bağlantısıyla birlikte burada görünecek.",
+      "tv.scan": "İndirmek için kodu tarayın ya da bilgisayarınızda veya telefonunuzda açın:", "tv.hash": "{file} için SHA-256",
+      "tv.releasenote": "Önce sürüm notlarını okuyun: bazı uygulamalar bir payload ya da ek kurulum gerektirir. Bu uygulamanın ve içeriğinin tek sorumlusu {author}.",
+      "tv.comments": "Yorumlar ({n})",
+      "tv.cm.like.scan": "Bu uygulamayı beğenmek ya da yorum yapmak için bu kodu telefonunuzla tarayın: uygulamanın GitHub'daki tartışması açılır; burada bir GitHub hesabı gerekir.",
+      "tv.cm.like.open": "Bu uygulamayı beğenmek ya da yorum yapmak için telefonunuzda {url} adresini açın: uygulamanın GitHub'daki tartışması açılır; burada bir GitHub hesabı gerekir.",
+      "tv.cm.first.scan": "Henüz yorum yok. İlk yorumu yazmak ya da bu uygulamayı beğenmek için bu kodu telefonunuzla tarayın: uygulamanın GitHub'daki tartışması açılır; burada bir GitHub hesabı gerekir.",
+      "tv.cm.first.open": "Henüz yorum yok. İlk yorumu yazmak ya da bu uygulamayı beğenmek için telefonunuzda {url} adresini açın: uygulamanın GitHub'daki tartışması açılır; burada bir GitHub hesabı gerekir.",
+      "tv.qr": "{address} için QR kodu",
+      "tv.nojs": "TV modu için JavaScript gerekir. <a href=\"{base}\">Normal kataloğu açın</a>."
     }
   };
 
@@ -836,7 +935,83 @@
     bar.appendChild(box); // after "Submit app"
   }
 
-  window.I18N = { lang: lang, langs: LANGS, t: t, html: html, text: text, category: category, kind: kind, date: date, apply: apply, next: next, choose: choose };
+  /* ---- Developers' words ----
+     Descriptions and release notes are written by the developers, in whatever language they use. When it
+     is not the reader's (English included), the text is machine-translated by Google Translate in the
+     reader's browser, and kept in this browser (a changed text is simply translated again). A text that
+     is already in the reader's language is left as it is, with no button. If it fails, the text stays. */
+  var TRANSLATE = "https://translate.googleapis.com/translate_a/single?client=gtx&dt=t&sl=auto&tl=";
+  var SAME = "=same";   // remembered for a text that is already in the reader's language
+  function remembered(key, value) {
+    try {
+      if (value === undefined) return window.localStorage.getItem(key);
+      window.localStorage.setItem(key, value);
+    } catch (error) { /* no storage: translated again next time */ }
+    return null;
+  }
+  function translate(source, done) {
+    var original = String(source || "").trim();
+    if (!original || original.length > 1500 || !window.fetch) return;
+    var key = "catalog-tr:" + lang + ":" + original;
+    var known = remembered(key);
+    if (known === SAME) return;
+    if (known) { done(known); return; }
+    window.fetch(TRANSLATE + lang + "&q=" + encodeURIComponent(original), { credentials: "omit", referrerPolicy: "no-referrer" })
+      .then(function (answer) { return answer.json(); })
+      .then(function (data) {
+        var out = (data[0] || []).map(function (part) { return part[0] || ""; }).join("").trim();
+        if (!out) return;
+        var from = String(data[2] || "").split("-")[0];
+        if (from === lang || out === original) { remembered(key, SAME); return; }
+        remembered(key, out);
+        done(out);
+      })
+      .catch(function () { /* the English stays */ });
+  }
+  /* Every text of the markup under `root` (code and preformatted text stay as written). */
+  function translateWithin(root) {
+    if (!root) return;
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    var nodes = [], node;
+    while ((node = walker.nextNode())) {
+      if (node.nodeValue.trim().length > 1 && !(node.parentNode.closest && node.parentNode.closest("code, pre"))) nodes.push(node);
+    }
+    var done = [], button = null, showing = true;
+    /* "Show original" appears once something is translated, and switches back and forth. */
+    function toggle() {
+      showing = !showing;
+      done.forEach(function (one) { if (one.node.parentNode) one.node.nodeValue = showing ? one.translated : one.original; });
+      button.textContent = t(showing ? "translate.original" : "translate.translated");
+    }
+    nodes.slice(0, 80).forEach(function (one) {
+      var original = one.nodeValue, lead = original.match(/^\s*/)[0], tail = original.match(/\s*$/)[0];
+      translate(original, function (text) {
+        if (!one.parentNode) return;
+        var translated = lead + text + tail;
+        one.nodeValue = showing ? translated : original;
+        done.push({ node: one, original: original, translated: translated });
+        if (button || !root.parentNode) return;
+        button = document.createElement("button");
+        button.type = "button";
+        button.className = "translated__toggle";
+        button.textContent = t("translate.original");
+        button.addEventListener("click", toggle);
+        /* data-translate-by="id": the button sits beside that heading instead of under the text;
+           data-translate-inline: at the end of the text itself. */
+        var by = root.getAttribute("data-translate-by");
+        by = by && document.getElementById(by);
+        if (root.hasAttribute("data-translate-inline")) root.appendChild(button);
+        else if (by) by.appendChild(button);
+        else root.parentNode.insertBefore(button, root.nextSibling);
+      });
+    });
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    var marked = document.querySelectorAll("[data-translate]");
+    for (var i = 0; i < marked.length; i++) translateWithin(marked[i]);
+  });
+
+  window.I18N = { translate: translate, lang: lang, langs: LANGS, t: t, html: html, text: text, category: category, kind: kind, date: date, apply: apply, next: next, choose: choose };
 
   document.addEventListener("DOMContentLoaded", function () {
     apply();

@@ -198,7 +198,7 @@ class SiteBuildTests(unittest.TestCase):
         self.assertLess(detail.index('data-react="likes"'), detail.index('class="article"'))
         self.assertIn('data-react="comments"', detail)
         self.assertIn('href="https://github.com/darkxex/ps5-homebrew-catalog/discussions?discussions_q=PPSA01234"', detail)
-        self.assertIn("connect-src 'self' https://raw.githubusercontent.com;", (self.out / "_headers").read_text(encoding="utf-8"))
+        self.assertIn("connect-src 'self' https://raw.githubusercontent.com https://translate.googleapis.com;", (self.out / "_headers").read_text(encoding="utf-8"))
         self.assertIn("/api/*/manifest.sig\n  Content-Type: application/octet-stream",
                       (self.out / "_headers").read_text(encoding="utf-8"))
         # The manifest names every JSON file of the API by its hash; the build itself never signs.
@@ -525,7 +525,7 @@ class TranslationTests(unittest.TestCase):
 
     def test_every_language_has_the_same_words(self):
         found = self.words()
-        self.assertEqual(sorted(found), ["de", "en", "es", "fr", "ja", "nl", "pt"])
+        self.assertEqual(sorted(found), ["de", "en", "es", "fr", "ja", "nl", "pt", "tr"])
         for code, keys in found.items():
             self.assertEqual(sorted(found["en"] - keys), [], f"{code} lacks words")
             self.assertEqual(sorted(keys - found["en"]), [], f"{code} has words English does not")

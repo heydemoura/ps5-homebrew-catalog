@@ -453,6 +453,15 @@
       if (featuredNow) return I18N.t(banner === 0 ? "stage.new" : "stage.featured");
       return app.categoryLabel || app.kindLabel;
     }
+    var stageToggle = $("[data-stage-toggle]", stage);
+    var translated = null;
+    var showingTranslation = true; /* One choice for every slide of the carousel. */
+    stageToggle.addEventListener("click", function () {
+      if (!translated) return;
+      showingTranslation = !showingTranslation;
+      $("[data-stage-text]", stage).textContent = showingTranslation ? translated.text : translated.original;
+      stageToggle.textContent = I18N.t(showingTranslation ? "translate.original" : "translate.translated");
+    });
     function fillWords(app, kicker) {
       $("[data-stage-kicker]", stage).textContent = kicker;
       $("[data-stage-title]", stage).textContent = app.name;
@@ -460,7 +469,18 @@
       if (app.version) meta.push(app.version.replace(/^v(?=\d)/, ""));
       if (app.size) meta.push(app.size);
       $("[data-stage-meta]", stage).textContent = meta.join("  ·  ");
-      $("[data-stage-text]", stage).textContent = app.description;
+      var stageText = $("[data-stage-text]", stage);
+      stageText.textContent = app.description;
+      /* Machine-translated: the button appears once the translation is in; the chosen side stays across slides. */
+      translated = null;
+      stageToggle.classList.add("stage__toggle--off");
+      I18N.translate(app.description, function (text) {
+        if (stageText.textContent !== app.description) return;
+        translated = { original: app.description, text: text };
+        stageText.textContent = showingTranslation ? text : app.description;
+        stageToggle.textContent = I18N.t(showingTranslation ? "translate.original" : "translate.translated");
+        stageToggle.classList.remove("stage__toggle--off");
+      });
       $("[data-stage-link]", stage).setAttribute("href", app.url);
       $("[data-stage-mark]", stage).hidden = !app.soon;
     }
@@ -518,6 +538,35 @@
         if (!held && !document.hidden && state.section === "discover" && !state.query && !state.category) showBanner(banner + 1);
       }, BANNER_SECONDS * 1000);
     }
+    /* Swipe the stage sideways with a finger, as the shelves below: the words follow it, and
+       letting go past a short distance goes to the next or previous featured app. */
+    var dragFrom = null;
+    var dragged = false;
+    function dragEnd(event, cancelled) {
+      if (!dragFrom) return;
+      var across = event.clientX - dragFrom.x;
+      dragFrom = null;
+      words.style.transition = "";
+      words.style.transform = "";
+      if (!dragged || cancelled || Math.abs(across) < 60) return;
+      showBanner(banner + (across < 0 ? 1 : -1));
+      startBanner();
+    }
+    stage.addEventListener("pointerdown", function (event) {
+      if (event.pointerType !== "touch" || featured.length < 2 || held || (event.target.closest && event.target.closest("a, button"))) return;
+      dragFrom = { x: event.clientX, y: event.clientY };
+      dragged = false;
+    });
+    stage.addEventListener("pointermove", function (event) {
+      if (!dragFrom) return;
+      var across = event.clientX - dragFrom.x;
+      if (!dragged && Math.abs(across) > 10 && Math.abs(across) > Math.abs(event.clientY - dragFrom.y)) dragged = true;
+      if (!dragged) return;
+      words.style.transition = "none";
+      words.style.transform = "translateX(" + Math.round(across / 3) + "px)";
+    });
+    stage.addEventListener("pointerup", function (event) { dragEnd(event, false); });
+    stage.addEventListener("pointercancel", function (event) { dragEnd(event, true); });
     function hold(tile) {
       var id = tile.getAttribute("data-shelf-app");
       var app = apps.filter(function (one) { return one.id === id; })[0];
@@ -640,7 +689,7 @@
   /* Everything in the file is other people's text: it goes in as text, never as markup. */
   function showComments(box, data) {
     var list = $("[data-comments-list]", box);
-    var latest = Array.isArray(data.latest) ? data.latest.slice(0, 10) : [];
+    var latest = Array.isArray(data.latest) ? data.latest.slice(0, 50) : [];
     if (!list || !latest.length) return;
     latest.forEach(function (comment) {
       if (!comment || typeof comment.text !== "string" || !comment.text) return;

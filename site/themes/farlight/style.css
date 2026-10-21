@@ -251,7 +251,8 @@ code { font: 0.9em var(--mono); }
 @keyframes breathe { from { transform: scale(1.12) translate3d(-1%, -0.6%, 0); } to { transform: scale(1.19) translate3d(1.2%, 0.8%, 0); } }
 .stage__shade { position: absolute; left: 0; right: 0; top: calc(-260 * var(--u)); bottom: calc(-330 * var(--u)); z-index: -1; -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent); mask-image: linear-gradient(180deg, #000 70%, transparent); background: linear-gradient(90deg, rgba(14, 15, 36, 0.93), rgba(14, 15, 36, 0) 77%), linear-gradient(180deg, rgba(14, 15, 36, 0) 42%, rgba(14, 15, 36, 0.95) 78%); }
 .stage__inner { position: relative; max-width: 1920px; min-height: calc(500 * var(--u)); margin: 0 auto; padding: calc(78 * var(--u)) var(--margin) calc(22 * var(--u)); }
-.stage__words { max-width: calc(1180 * var(--u)); transition: opacity 0.22s ease, transform 0.3s var(--ease); }
+.stage { touch-action: pan-y; }
+.stage__words { max-width: min(calc(1180 * var(--u)), calc(100% + var(--margin) - 700 * var(--u))); transition: opacity 0.22s ease, transform 0.3s var(--ease); }
 .stage__words.is-leaving { opacity: 0; transform: translateX(calc(-26 * var(--u))); transition-duration: 0.14s; }
 .stage__words.is-arriving { opacity: 0; transform: translateX(calc(24 * var(--u))); transition: none; }
 .stage__title { margin: calc(26 * var(--u)) 0 0 calc(-4 * var(--u)); font: 500 calc(92 * var(--u))/1.06 var(--display); letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-bottom: 0.08em; }
@@ -397,7 +398,7 @@ html:not(.js) .sort { display: none; }
 /* Comments: what people wrote in the app's GitHub discussion, as plain text. */
 .comments__none, .comments__more { margin: 0; }
 .comments__none[hidden], .comments__more[hidden] { display: none; }
-.comments__list { margin: calc(8 * var(--u)) 0 0; padding: 0; list-style: none; }
+.comments__list { margin: calc(8 * var(--u)) 0 0; padding: 0 calc(6 * var(--u)) 0 0; list-style: none; max-height: calc(560 * var(--u)); overflow-y: auto; overscroll-behavior: contain; }
 .comments__list li { margin: 0 0 calc(12 * var(--u)); padding: calc(18 * var(--u)) calc(22 * var(--u)); border-radius: calc(16 * var(--u)); background: rgba(244, 239, 230, 0.06); }
 .comments__by { display: block; margin: 0 0 calc(6 * var(--u)); font-size: 0.86em; color: rgba(244, 239, 230, 0.62); }
 .comments__by b { font-weight: 600; color: var(--ink); }
@@ -410,6 +411,10 @@ html:not(.js) .sort { display: none; }
 .notes ul { margin: 0 0 calc(14 * var(--u)); padding-left: 1.2em; }
 .notes li { margin: 0 0 calc(6 * var(--u)); }
 .notes code { font-size: 0.92em; }
+.translated__toggle { display: block; margin: calc(8 * var(--u)) 0 0; padding: 0; border: 0; background: none; font: inherit; font-size: calc(16 * var(--u)); color: rgba(244, 239, 230, 0.62); text-decoration: underline; cursor: pointer; }
+h2 .translated__toggle, .article__lead .translated__toggle { display: inline; margin: 0 0 0 calc(14 * var(--u)); font-weight: 400; vertical-align: middle; }
+.stage__toggle--off { visibility: hidden; }
+.translated__toggle:hover, .translated__toggle:focus-visible { color: rgba(244, 239, 230, 0.9); }
 .notes__source { margin-top: calc(12 * var(--u)); font-size: 0.9em; color: rgba(244, 239, 230, 0.62); }
 /* Safety: what the release scan found, as labels with a sentence each. */
 .safety { display: flex; flex-wrap: wrap; gap: calc(12 * var(--u)); margin: 0 0 calc(16 * var(--u)); padding: 0; list-style: none; }
@@ -488,6 +493,7 @@ html:not(.js) .sort { display: none; }
   .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .brand__rule, .brand__from { display: none; }
   .stage__cover { right: calc(150 * var(--u)); }
+  .stage__words { max-width: min(calc(1180 * var(--u)), calc(100% + var(--margin) - 534 * var(--u))); }
   .page__inner { gap: calc(70 * var(--u)); }
 }
 @media (max-width: 900px) {
@@ -502,6 +508,7 @@ html:not(.js) .sort { display: none; }
   .stage__cover { position: relative; right: auto; top: auto; width: 132px; height: 132px; margin: 0 0 26px; }
   .stage__title { font-size: clamp(34px, 9.6vw, 62px); white-space: normal; }
   .stage__meta { white-space: normal; }
+  .stage__words { max-width: none; }
   .stage__inner { display: flex; flex-direction: column; }
   .stage__cover { order: -1; }
   /* One column: the panel comes right after the app's name and facts, before the article. */

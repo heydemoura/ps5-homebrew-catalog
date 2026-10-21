@@ -198,7 +198,7 @@
     el.heading.textContent = state.kind.indexOf("cat:") === 0 ? I18N.category(state.kind.slice(4), HEADINGS[state.kind]) : I18N.t(HEADINGS[state.kind]);
     var sortLabel = I18N.t(SORTS.filter(function (s) { return s[0] === state.sort; })[0][1]);
     el.sort.textContent = sortLabel;
-    el.status.textContent = I18N.t("tv.sortedby", { count: I18N.t("n.apps", { n: view.length }), sort: sortLabel.toLowerCase() });
+    el.status.textContent = I18N.t("tv.sortedby", { count: I18N.t("n.apps", { n: view.length }), sort: sortLabel.toLocaleLowerCase(I18N.lang) });
     railItems.forEach(function (item) { item.classList.toggle("is-current", item.dataset.kind === state.kind); });
     state.index = Math.min(state.index, Math.max(view.length - 1, 0));
   }
@@ -296,7 +296,9 @@
     name.id = "tv-detail-name";
     info.appendChild(name);
     info.appendChild(make("p", "tv-detail__by", I18N.t("tv.by", { author: app.author })));
-    info.appendChild(make("p", "tv-detail__desc", app.description));
+    var desc = make("p", "tv-detail__desc", app.description);
+    info.appendChild(desc);
+    I18N.translate(app.description, function (text) { desc.textContent = text; });
     var attrs = make("dl", "tv-attrs");
     attr(attrs, I18N.t("d.version"), app.version);
     attr(attrs, I18N.t("d.format"), app.format_label);
