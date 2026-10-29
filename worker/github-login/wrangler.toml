@@ -1,0 +1,11 @@
+name = "prosperostore-login"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+[vars]
+# The OAuth App's Client ID (public; not the secret).
+CLIENT_ID = ""
+# The sites that may ask for a sign-in, comma separated, exactly as a browser writes an origin.
+ALLOWED_ORIGINS = "https://prosperostore.net"
+
+# The Client Secret is not written here: `npx wrangler secret put CLIENT_SECRET`.

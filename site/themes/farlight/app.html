@@ -7,12 +7,13 @@
       <div class="page__cover"><img src="$icon" alt="$name icon" width="512" height="512"><span class="page__sheen" aria-hidden="true"></span></div>
       <p class="kicker kicker--plain"><a href="${base}?category=$category" data-i18n="cat.$category">$category_label</a></p>
       <h1 class="page__title" id="app-title" translate="no">$name</h1>
-      <p class="page__line">$author<span class="sep" aria-hidden="true">·</span><span data-i18n="app.updated">Updated</span> <time datetime="$updated_iso">$updated</time></p>
+      <p class="page__line">$author_html<span class="sep" aria-hidden="true">·</span><span data-i18n="app.updated">Updated</span> <time datetime="$updated_iso">$updated</time></p>
       <ul class="chips" aria-label="Release facts" data-i18n-attr="aria-label:app.facts">
         <li>$version_label</li>
         <li>$size_label</li>
         <li data-license>$license</li>
         <li class="chips__caps">$format</li>
+        $downloads_chip
         $shared_chip
       </ul>
       $shared_note
@@ -57,6 +58,7 @@ $steps
           <div><dt data-i18n="d.license">License</dt><dd data-license>$license</dd></div>
           <div><dt data-i18n="d.file">File</dt><dd>$artifact_name</dd></div>
           <div><dt data-i18n="d.updated">Updated</dt><dd><time datetime="$updated_iso">$updated</time></dd></div>
+          $downloads_row
         </dl>
       </div>
     </div>

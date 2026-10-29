@@ -150,7 +150,7 @@ def draft_record(repo_value: str, github: GitHub, apps_dir: Path, tag: str | Non
     title_name = (localized.get(language) or {}).get("titleName", "")
     draft.facts.append(f"{param_path}: titleId {titleid!r}, titleName {title_name!r}, "
                        f"contentId {param.get('contentId')!r}, contentVersion {param.get('contentVersion')!r}")
-    if not TITLE_ID.fullmatch(titleid) or not titleid.startswith("PPSA"):
+    if not TITLE_ID.fullmatch(titleid) or titleid.startswith("CUSA"):
         draft.blockers.append(f"titleId {titleid!r} is not a PS5 (PPSA) title ID")
         return draft
     record["titleid"] = titleid

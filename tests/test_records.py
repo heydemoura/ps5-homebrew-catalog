@@ -58,6 +58,10 @@ class RecordTests(unittest.TestCase):
 
     def test_title_id_format_and_reserved(self):
         self.assertRejected(record(titleid="ppsa01234"), "four uppercase letters")
+        self.assertRejected(record(titleid="F4K377031"), "four uppercase letters", filename="F4K377031.json")
+        self.assertRejected(record(titleid="NPXS12345"), "must not start with NPXS", filename="NPXS12345.json")
+        self.assertRejected(record(titleid="CUSA01234"), "must not start with CUSA", filename="CUSA01234.json")
+        self.assertEqual(self.errors(record(titleid="FAKE77031"), "FAKE77031.json"), [])
         self.assertRejected(record(titleid="PPSA99999"), "reserved")
 
     def test_sha256_format(self):
@@ -125,6 +129,13 @@ class RecordTests(unittest.TestCase):
                             "icon_member needs a .zip")
         self.assertRejected(reservation(icon_member="a/icon0.png"), "icon_member must be absent in a reservation")
         self.assertRejected(record(**dict(inside, icon_member=None)), "icon_member must not be null")
+
+    def test_internal_only_is_optional_and_must_be_true(self):
+        self.assertEqual(self.errors(record()), [])
+        self.assertEqual(self.errors(record(internalOnly=True)), [])
+        for bad in (False, "true", 1, None):
+            with self.subTest(value=bad):
+                self.assertRejected(record(internalOnly=bad), "internalOnly must be true, or left out")
 
     def test_only_reservations_may_be_null(self):
         self.assertRejected(record(icon_url=None), "icon_url must not be null")

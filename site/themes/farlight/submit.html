@@ -1,0 +1,103 @@
+<section class="portal" id="submit" data-submit data-catalog="$catalog_url" data-kind-categories="$kind_categories" data-login="$login_url" data-repo="$repo">
+  <a class="back" href="$base"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="app.back">All apps</span></a>
+  <p class="kicker" data-i18n="submit.kicker">Developers</p>
+  <h1 class="page__title" data-i18n="submit.title">Submit your app</h1>
+  <p class="portal__lead" data-i18n="submit.lead">Paste your GitHub repository. This page reads its latest release in your browser and prepares the listing file; nothing is sent to this site.</p>
+  <noscript><p class="article__note" data-i18n-html="submit.noscript" data-v-href="$guide_url">This page needs JavaScript. Without it, follow the <a href="$guide_url">submitting guide</a>.</p></noscript>
+
+  <form class="portal__form" data-submit-form novalidate>
+    <label class="portal__label" for="submit-repo" data-i18n="submit.repo">Repository</label>
+    <div class="portal__row">
+      <input id="submit-repo" class="portal__input" type="text" data-submit-repo placeholder="owner/repository" data-i18n-attr="placeholder:submit.repo.ph" autocomplete="off" spellcheck="false" autocapitalize="off">
+      <button class="button button--gold portal__go" type="submit" data-submit-check data-i18n="submit.check">Check</button>
+    </div>
+  </form>
+  <p class="portal__status" data-submit-status role="status" aria-live="polite"></p>
+
+  <div class="portal__box portal__box--bad" data-submit-blockers hidden>
+    <h2 data-i18n="submit.blocked">Fix this first</h2>
+    <ul data-submit-blockers-list></ul>
+    <div class="portal__login" data-submit-login hidden>
+      <button type="button" class="button button--line" data-submit-login-button data-i18n="submit.login.btn">Sign in with GitHub</button>
+      <span data-submit-login-who hidden></span>
+      <button type="button" class="button button--line" data-submit-logout hidden data-i18n="submit.login.out">Sign out</button>
+      <small data-submit-login-hint data-i18n="submit.login.hint">It raises GitHub's limit from 60 to 5,000 requests an hour and asks for no permissions.</small>
+    </div>
+    <p data-submit-listed hidden><a data-submit-listed-link href="$base" data-i18n="submit.listed.go">Manage it from your developer page</a></p>
+  </div>
+
+  <div data-submit-step hidden>
+    <label class="portal__field portal__field--wide portal__release">
+      <span data-i18n="submit.f.release">Release</span>
+      <select class="portal__input" data-submit-release></select>
+    </label>
+    <div class="portal__box" data-submit-zip hidden>
+      <h2 data-i18n="submit.zip.title">Read it from the release file</h2>
+      <p data-submit-zip-why></p>
+      <input class="portal__input" type="file" accept=".zip,application/zip" data-submit-zip-file>
+      <p class="portal__problem portal__problem--hint" data-submit-zip-status role="status" aria-live="polite"></p>
+    </div>
+    <div data-submit-detail hidden>
+    <div class="portal__summary">
+      <figure class="portal__icon">
+        <img data-submit-icon alt="" width="128" height="128">
+        <figcaption data-i18n="submit.icon">Icon sent with the listing</figcaption>
+      </figure>
+      <dl class="facts portal__facts" data-submit-facts></dl>
+    </div>
+
+    <div class="portal__box" data-submit-warnings hidden>
+      <h2 data-i18n="submit.warnings">Take a look</h2>
+      <ul data-submit-warnings-list></ul>
+    </div>
+
+    <h2 class="portal__h2" data-i18n="submit.step2">Complete the listing</h2>
+    <div class="portal__fields">
+      <label class="portal__field portal__field--wide" data-submit-asset-box>
+        <span data-i18n="submit.f.asset">Release file</span>
+        <select class="portal__input" data-submit-asset></select>
+        <small data-submit-asset-note></small>
+      </label>
+      <label class="portal__field">
+        <span data-i18n="submit.f.kind">Type</span>
+        <select class="portal__input" data-submit-kind><option value="" data-i18n="submit.pick">Choose…</option>$kind_options</select>
+      </label>
+      <label class="portal__field">
+        <span data-i18n="submit.f.category">Category</span>
+        <select class="portal__input" data-submit-category disabled><option value="" data-i18n="submit.pick">Choose…</option>$category_options</select>
+      </label>
+      <label class="portal__field portal__field--wide">
+        <span data-i18n="submit.f.desc">Description</span>
+        <textarea class="portal__input" rows="3" maxlength="200" data-submit-description></textarea>
+        <small data-submit-chars></small>
+      </label>
+      <label class="portal__field portal__field--wide">
+        <span data-i18n="submit.f.icon">Icon link</span>
+        <input class="portal__input" type="url" maxlength="500" data-submit-icon-url autocomplete="off" spellcheck="false">
+        <small data-submit-icon-note></small>
+      </label>
+      <label class="portal__field">
+        <span data-i18n="submit.f.author">Developer name</span>
+        <input class="portal__input" type="text" maxlength="64" data-submit-author autocomplete="off">
+      </label>
+      <label class="portal__field">
+        <span data-i18n="submit.f.license">License</span>
+        <input class="portal__input" type="text" maxlength="64" data-submit-license autocomplete="off" spellcheck="false">
+      </label>
+    </div>
+
+    <h2 class="portal__h2" data-i18n="submit.out">Your listing file</h2>
+    <p class="portal__path"><code data-submit-path></code></p>
+    <pre class="portal__json" data-submit-json tabindex="0"></pre>
+    <p class="portal__problem" data-submit-problem role="alert" hidden></p>
+    <div class="portal__actions">
+      <a class="button button--gold" data-submit-open href="$repo" target="_blank" rel="noopener noreferrer" aria-disabled="true"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="6" cy="5.5" r="2.4" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="6" cy="18.5" r="2.4" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="18" cy="18.5" r="2.4" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M6 8v8M18 16V9.5A3.5 3.5 0 0 0 14.5 6H11M13.5 3.2L10.7 6l2.8 2.8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="submit.open">Open pull request on GitHub</span></a>
+      <button type="button" class="button button--line portal__copy" data-submit-copy data-i18n="copy">Copy</button>
+    </div>
+    <p class="article__note" data-i18n="submit.after">GitHub asks you to fork the catalog and then opens the pull request from your account. Sign in as the owner of the repository: the check compares both. A maintainer reviews it, and the app is listed when it is merged.</p>
+    </div>
+  </div>
+
+  <p class="portal__alt" data-i18n-html="submit.alt" data-v-href="$guide_url">Prefer to do it by hand? Follow the <a href="$guide_url">submitting guide</a>.</p>
+  <script src="$submit_js"></script>
+</section>

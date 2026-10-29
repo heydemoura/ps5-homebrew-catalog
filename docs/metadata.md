@@ -2,14 +2,15 @@
 
 Each app is one UTF-8 JSON file at `apps/<TITLEID>.json` (or `apps/<TITLEID>-<owner>.json`, see [Shared title IDs](#shared-title-ids)), at most 8 KiB,
 containing a single object with the twelve fields below, plus `icon_member` only
-when the icon is [inside the release file](#icon-inside-the-release-file). No
+when the icon is [inside the release file](#icon-inside-the-release-file), and
+`internalOnly` only when you want it ([see below](#internalonly)). No
 field may be missing and no other fields are allowed. Values are non-empty
 strings; only [reservations](#reservations-coming-soon) use `null`, and
 `icon_url` when `icon_member` is present.
 
 | Field | Max length | Rules |
 | --- | ---: | --- |
-| `titleid` | 9 | Four uppercase letters and five digits, e.g. `PPSA01234`. Must equal the start of the filename (see [Shared title IDs](#shared-title-ids)), and should equal the app's `titleId` in `sce_sys/param.json`. `PPSA99999` is reserved. |
+| `titleid` | 9 | Four uppercase letters and five digits, e.g. `PPSA01234`. Custom prefixes such as `FAKE77031` are allowed, except `CUSA` (PS4) and `NPXS` (system); such an app is listed under `shared` in the API, which ProsperoStore before 1.000.110 does not show. Must equal the start of the filename (see [Shared title IDs](#shared-title-ids)), and should equal the app's `titleId` in `sce_sys/param.json`. `PPSA99999` is reserved. |
 | `name` | 64 | Display name. Unique across the catalog, ignoring case. |
 | `kind` | 4 | `app`, `game` or `tool`. |
 | `category` | 16 | One of the keys under [Categories](#categories), such as `emulators` or `video`. |
@@ -21,6 +22,18 @@ strings; only [reservations](#reservations-coming-soon) use `null`, and
 | `artifact_url` | 500 | `<source_repo>/releases/download/<tag>/<asset>` for a published release; the asset is a `.zip` of the app folder, the only [format](artifact-formats.md) accepted at the moment. Moving links such as `/releases/latest/download/` are rejected. Unique across the catalog. |
 | `sha256` | 64 | SHA-256 of the artifact as 64 lowercase hex characters. Unique across the catalog. |
 | `icon_url` | 500 | Direct HTTPS link ending in `.png`, `.jpg`, `.jpeg` or `.webp`, returning that image type, at most 2 MiB. Square; 512×512 recommended (the size of `sce_sys/icon0.png`), 256×256 at least. Larger images are scaled down to 512 px. Pin to a tag or commit. |
+
+## internalOnly
+
+Optional. Add `"internalOnly": true` when the app must live on the console's
+internal storage (`/data/homebrew`). ProsperoStore then installs it there
+whatever install location the user chose in its settings. It can be added to an
+app that is already listed: from then on, new installs and updates are
+downloaded to internal storage, even when the previous version is on another
+drive. Once the new copy is in place, the store uninstalls the older one it
+installed on that other drive (the app's saved data stays). The only accepted value is `true`; leave the field out, or remove it later, for the
+normal behaviour (the location chosen in the store's settings). The API
+repeats it in `apps/<ID>.json`.
 
 ## Categories
 

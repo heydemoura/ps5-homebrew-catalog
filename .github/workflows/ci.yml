@@ -1,12 +1,16 @@
 name: CI
 
 # A pull request runs the tests. Every merge to main publishes the site; a run started by hand
-# (Actions > CI > Run workflow on main) publishes it again without a merge. Merges made close
-# together each start a run, and they go out one after another.
+# (Actions > CI > Run workflow on main) publishes it again without a merge, and so does the
+# timer, once a night, so the download counts (read from GitHub when the site is built)
+# stay current on quiet days. Merges made close together each start a run, and they go out one
+# after another.
 on:
   pull_request:
   push:
     branches: [main]
+  schedule:
+    - cron: '23 3 * * *'
   workflow_dispatch:
 
 permissions:

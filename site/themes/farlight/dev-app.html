@@ -1,0 +1,16 @@
+<li class="dev-app tone-$id" data-dev-app="$id">
+  <a class="dev-app__icon" href="$url"><img src="$icon" alt="" width="96" height="96" loading="lazy" decoding="async"></a>
+  <div class="dev-app__main">
+    <a class="dev-app__name" href="$url" translate="no">$name</a>
+    <p class="dev-app__meta">$version_label<span class="sep" aria-hidden="true">·</span><span data-i18n="app.updated">Updated</span> <time datetime="$updated_iso">$updated</time></p>
+  </div>
+  <dl class="dev-app__stats">
+    <div><dt data-i18n="d.downloads">Downloads</dt><dd>$downloads_html</dd></div>
+    <div><dt data-i18n="d.likes">Likes</dt><dd data-dev-count="likes">—</dd></div>
+    <div><dt data-i18n="d.comments">Comments</dt><dd data-dev-count="comments">—</dd></div>
+  </dl>
+  <div class="dev-app__actions">
+    <a class="button button--line" href="$edit_url" rel="noopener" data-i18n="dev.edit">Edit listing</a>
+    <a class="button button--line" href="$release_url" rel="nofollow" data-i18n="source.release" data-v-tag="$tag">Release $tag</a>
+  </div>
+</li>

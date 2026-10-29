@@ -148,6 +148,7 @@
         updated: item.getAttribute("data-updated") || "",
         added: item.getAttribute("data-added") || "",
         released: item.getAttribute("data-released") || "",
+        downloads: Number(item.getAttribute("data-downloads")) || 0,
         text: (item.getAttribute("data-search-text") || "").toLowerCase(),
         url: item.getAttribute("data-url"),
         icon: item.getAttribute("data-icon"),
@@ -169,9 +170,13 @@
     };
     var byAdded = function (a, b) { return a.added < b.added ? 1 : a.added > b.added ? -1 : byName(a, b); };
     var byLikes = function (a, b) { return b.likes - a.likes || byName(a, b); };
+    var byDownloads = function (a, b) { return b.downloads - a.downloads || byName(a, b); };
     var ORDERS = { name: { label: I18N.t("order.name"), by: byName }, updated: { label: I18N.t("order.updated"), by: byReleased },
-                   liked: { label: I18N.t("order.liked"), by: byLikes } };
+                   liked: { label: I18N.t("order.liked"), by: byLikes },
+                   downloaded: { label: I18N.t("order.downloaded"), by: byDownloads } };
     var likesKnown = false; // "Most liked" is offered once the likes have arrived
+    // "Most downloaded" is offered when the build knows the download counts (they come with the page).
+    var downloadsKnown = apps.some(function (app) { return app.downloads > 0; });
     // The categories, in the catalog's order, as the tiles carry them.
     var categories = [];
     apps.forEach(function (app) {
@@ -276,7 +281,7 @@
     var shelvesBox = $("[data-shelves]");
     var featured = [];
     var shelvesReady = false;
-    var topShelves = 1; // "Most liked" goes after the new and updated shelves
+    var topShelves = 1; // "Most liked" goes after the new, updated and most downloaded shelves
     function buildShelves() {
       if (shelvesReady) return;
       shelvesReady = true;
@@ -298,7 +303,22 @@
         featured = changed.slice(0, FEATURED);
         addShelf({ title: I18N.t("shelf.changed"), apps: changed });
       }
-      topShelves = shelvesBox.children.length;
+      // The apps GitHub has served most: a rough sign of popularity, with each place and its count.
+      var downloaded = available.filter(function (app) { return app.downloads > 0; }).sort(byDownloads).slice(0, MOST_LIKED);
+      // Its tiles keep their likes and comments (paintStats dresses them); the place and the count are added.
+      if (downloaded.length) addShelf({ title: I18N.t("shelf.downloaded"), apps: downloaded, dress: function (tile, app, position) {
+        var rank = document.createElement("span");
+        rank.className = "tile__rank";
+        rank.textContent = position + 1;
+        tile.appendChild(rank);
+        var line = $(".tile__author", tile);
+        if (!line) return;
+        line.textContent = "";
+        var count = document.createElement("b");
+        count.textContent = I18N.t("n.downloads", { n: app.downloads });
+        line.appendChild(count);
+      } });
+      topShelves = shelvesBox.children.length;      // "Most liked" goes after these, below "Most downloaded"
       categories.forEach(function (one) {
         addShelf({ title: one.label, category: one.key, apps: available.filter(function (app) { return app.category === one.key; }).sort(byName) });
       });
@@ -635,7 +655,9 @@
     }
     var sort = $("[data-sort]");
     if (sort) sort.addEventListener("click", function () {
-      var order = likesKnown ? ["name", "updated", "liked"] : ["name", "updated"];
+      var order = ["name", "updated"];
+      if (likesKnown) order.push("liked");
+      if (downloadsKnown) order.push("downloaded");
       state.sort = order[(order.indexOf(state.sort) + 1) % order.length];
       writeAddress(false);
       showGrid();
@@ -668,6 +690,16 @@
     var base = document.body.getAttribute("data-base") || "/";
     if (search) search.addEventListener("keydown", function (event) {
       if (event.key === "Enter" && search.value.trim()) window.location.href = base + "?q=" + encodeURIComponent(search.value.trim());
+    });
+    var dev = $("[data-dev]");
+    if (dev) commentsFile("index.json", function (data) {
+      $$("[data-dev-app]", dev).forEach(function (row) {
+        var entry = data.apps && data.apps[row.getAttribute("data-dev-app")];
+        ["likes", "comments"].forEach(function (what) {
+          var cell = $('[data-dev-count="' + what + '"]', row);
+          if (cell) cell.textContent = String(entry && entry[what] > 0 ? Math.floor(entry[what]) : 0);
+        });
+      });
     });
     var comments = $("[data-comments-for]");
     if (comments) commentsFile("apps/" + comments.getAttribute("data-comments-for") + ".json", function (data) {

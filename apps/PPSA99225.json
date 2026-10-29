@@ -1,0 +1,14 @@
+{
+  "titleid": "PPSA99225",
+  "name": "RuneScape Launcher",
+  "kind": "app",
+  "category": "utilities",
+  "description": "Jagex Launcher on PS5 for Old School RuneScape, with the official client or RuneLite; press L3+R3 for the on-screen keyboard.",
+  "license": "GPL-3.0",
+  "author": "bizkut",
+  "version": null,
+  "source_repo": null,
+  "artifact_url": null,
+  "sha256": null,
+  "icon_url": null
+}

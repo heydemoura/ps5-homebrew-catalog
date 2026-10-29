@@ -36,6 +36,7 @@ from .report import Report
 CODE_QUERIES = (
     ("filename:param.json path:sce_sys PPSA", "sce_sys/param.json", True),
     ("filename:param.json titleId PPSA", "param.json titleId", True),
+    ("filename:param.json path:sce_sys titleId", "sce_sys/param.json (any title ID)", True),   # custom prefixes
     ('"/data/homebrew/" PPSA extension:md', "README install path", False),   # payload loaders mention it too
     ("TITLE_ID PPSA extension:sh", "build script title ID", True),
     ("ShadowMountPlus extension:md", "mentions ShadowMountPlus", False),
@@ -57,7 +58,8 @@ LABEL = "discovery"
 TITLE = "Discovery: native PS5 apps not listed yet"
 CATALOG_REPO = "darkxex/ps5-homebrew-catalog"
 STATE = re.compile(r"<!-- discovery-state: (\[.*?\]) -->")
-PPSA = re.compile(r"PPSA\d{5}")
+# A title ID in a file name or release text: any four letters and five digits, except PS4 and system prefixes.
+TITLE_ID_MENTION = re.compile(r"(?<![A-Z])(?!CUSA|NPXS)[A-Z]{4}\d{5}(?!\d)")
 REJECTED = "rejected: a listing pull request was closed without merging"
 MAX_BODY = 60000
 MAX_NEW_PULLS = 10         # new listing pull requests per run
@@ -209,7 +211,7 @@ def assess(candidate: Candidate, github: GitHub, apps_dir: Path) -> None:
     candidate.release = release
     candidate.draft = draft_record(candidate.repo, github, apps_dir)
     blockers = candidate.draft.blockers
-    evidence = PPSA.search(" ".join(a["name"] for a in files) + " " + (release.get("body") or ""))
+    evidence = TITLE_ID_MENTION.search(" ".join(a["name"] for a in files) + " " + (release.get("body") or ""))
     if not blockers:
         problem = complete(candidate, github)
         candidate.status = "ready" if problem is None else "review"

@@ -1,0 +1,14 @@
+{
+  "titleid": "PPSA69428",
+  "name": "A2 Racer II",
+  "kind": "game",
+  "category": "pc-ports",
+  "description": "Native PS5 port of A2 Racer II (Davilex, 1998) on berobloom's a2racer2-re, with DualSense, touchpad mouse and a police light bar; needs your own disc image.",
+  "license": "GPL-3.0-or-later",
+  "author": "Marice",
+  "version": "00.001.000",
+  "source_repo": "https://github.com/Marice/a2-racer-2-ps5",
+  "artifact_url": "https://github.com/Marice/a2-racer-2-ps5/releases/download/v00.001.000/A2Racer2-PS5-00.001.000.zip",
+  "sha256": "f7829d751aebb7f88db7085d9a619e7a71098f64eb63484200e4cf127e997891",
+  "icon_url": "https://raw.githubusercontent.com/Marice/a2-racer-2-ps5/c273c68729ef913e1c61982fa18d6fd46945ce9b/sce_sys/icon0.png"
+}

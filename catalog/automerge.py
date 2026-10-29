@@ -1,7 +1,8 @@
 """Which pull requests are merged without a maintainer.
 
-Three kinds are: a developer moving their own app to its newest release, a developer who
-already has an app in the catalog adding another one of their own, and the catalog bot's own
+Four kinds are: a developer moving their own app to its newest release, a developer releasing
+the title ID they reserved, a developer who already has an app in the catalog adding another one
+of their own, and the catalog bot's own
 pull request that moves apps to their newest release (every record in it checked like a
 developer's own bump).
 
@@ -15,12 +16,15 @@ from __future__ import annotations
 from .github import GitHub, GitHubError
 from .policy import REGULAR_FILE_MODE, Change
 from .records import RECORD_PATH, Record
-from .updates import is_release_bump
+from .updates import is_release_bump, newest_release
 
 # The account the catalog's GitHub App acts as, and the one branch it keeps its pending updates on
 # (the withdrawals branch is never merged here).
 UPDATE_BOT = "ps5-catalog-bot[bot]"
 UPDATE_BRANCH = "catalog-update/all"
+
+# Fields a developer who owns the repository may also change in a release bump.
+OWNER_FIELDS = ("description", "license", "internalOnly")
 
 
 def owns(author: str, record: Record, github: GitHub) -> bool:
@@ -28,6 +32,13 @@ def owns(author: str, record: Record, github: GitHub) -> bool:
     if author.casefold() == record.owner.casefold():
         return True
     return github.account_type(record.owner) == "Organization" and github.is_public_member(record.owner, author)
+
+
+def in_repository(url: str, record: Record) -> bool:
+    """True when url is a file of the app's repository, on raw.githubusercontent.com or as github.com/<repo>/raw/."""
+    prefixes = (f"https://raw.githubusercontent.com/{record.owner}/{record.repo}/",
+                f"https://github.com/{record.owner}/{record.repo}/raw/")
+    return url.casefold().startswith(tuple(prefix.casefold() for prefix in prefixes))
 
 
 def has_listed_app(author: str, listed: list[Record], github: GitHub) -> bool:
@@ -72,19 +83,43 @@ def new_app_reasons(author: str, changes: list[Change], new: Record | None, list
         return [f"GitHub could not be asked: {error}"]
     if not new.data["artifact_url"].startswith(new.data["source_repo"].rstrip("/") + "/releases/download/"):
         reasons.append("the file is not a release file of the app's repository")
-    icons = f"https://raw.githubusercontent.com/{new.owner}/{new.repo}/"
     # An icon inside the release file needs no address: the file itself is checked above.
-    if new.data["icon_url"] and not new.data["icon_url"].casefold().startswith(icons.casefold()):
+    if new.data["icon_url"] and not in_repository(new.data["icon_url"], new):
+        reasons.append("the icon is at an address outside the app's repository")
+    return reasons
+
+
+def release_reservation_reasons(author: str, holder: str | None, new: Record, github: GitHub) -> list[str]:
+    """Why a reservation's first release is not the holder's own, newest release of their repository."""
+    if new.reserved:
+        return ["it changes a reservation"]
+    if holder is None:
+        return ["could not determine who reserved the title ID"]
+    if holder.casefold() != author.casefold():
+        return [f"the title ID is reserved by @{holder}, not @{author}"]
+    reasons = []
+    try:
+        if not owns(author, new, github):
+            return [f"@{author} does not own {new.owner}/{new.repo}"]
+        release = newest_release(github, new.owner, new.repo)
+        if not release or release.get("tag_name") != new.tag:
+            reasons.append(f"the release is not the newest of {new.owner}/{new.repo}")
+    except GitHubError as error:
+        return [f"GitHub could not be asked: {error}"]
+    if not new.data["artifact_url"].startswith(new.data["source_repo"].rstrip("/") + "/releases/download/"):
+        reasons.append("the file is not a release file of the app's repository")
+    if new.data["icon_url"] and not in_repository(new.data["icon_url"], new):
         reasons.append("the icon is at an address outside the app's repository")
     return reasons
 
 
 def bump_reasons(author: str, changes: list[Change], old: Record | None, new: Record | None,
-                 github: GitHub) -> list[str]:
+                 github: GitHub, holder: str | None = None) -> list[str]:
     """Why this pull request is left for a maintainer; an empty list means it may be merged.
 
     old and new are the listed record and the proposed one, for a pull request whose only change
-    is one modified record; they are None otherwise or when a record could not be read.
+    is one modified record; they are None otherwise or when a record could not be read. holder is
+    who reserved the title ID, when old is a reservation.
     """
     if len(changes) != 1:
         return [f"it changes {len(changes)} files; a release bump changes one record"]
@@ -99,7 +134,9 @@ def bump_reasons(author: str, changes: list[Change], old: Record | None, new: Re
         return ["the record is not a regular file"]
     if old is None or new is None:
         return ["the listed or the proposed record could not be read"]
-    if old.reserved or new.reserved:
+    if old.reserved:
+        return release_reservation_reasons(author, holder, new, github)
+    if new.reserved:
         return ["it changes a reservation"]
     return release_bump_reasons(old, new, github, author)
 
@@ -139,20 +176,23 @@ def release_bump_reasons(old: Record, new: Record, github: GitHub, author: str |
     With an author, it must also be the app's developer; the bot's pull request passes none."""
     reasons = []
     try:
-        # The description may change only with an author, who must also own the repository.
-        if not is_release_bump(old, new, github, ("description",) if author is not None else ()):
-            reasons.append("it changes more than the release (version, file, sha256, icon, description), "
+        # The description, the license and internalOnly may change only with an author, who must also own the repository.
+        if not is_release_bump(old, new, github, OWNER_FIELDS if author is not None else ()):
+            reasons.append("it changes more than the release (version, file, sha256, icon, description, license, internalOnly), "
                            f"or the release is not the newest of {new.owner}/{new.repo}")
         if author is not None and not owns(author, new, github):
             reasons.append(f"@{author} does not own {new.owner}/{new.repo}")
     except GitHubError as error:
         return [f"GitHub could not be asked: {error}"]
-    if old.data["sha256"] == new.data["sha256"] or old.data["artifact_url"] == new.data["artifact_url"]:
+    same_file = old.data["sha256"] == new.data["sha256"] or old.data["artifact_url"] == new.data["artifact_url"]
+    # An owner may correct the description or license of the release already listed.
+    corrects_text = author is not None and any(old.data.get(f) != new.data.get(f) for f in OWNER_FIELDS)
+    without_text = lambda data: {k: v for k, v in data.items() if k not in OWNER_FIELDS}
+    if same_file and not (corrects_text and without_text(old.data) == without_text(new.data)):
         reasons.append("it does not point at a new file")
     if not new.data["artifact_url"].startswith(new.data["source_repo"].rstrip("/") + "/releases/download/"):
         reasons.append("the file is not a release file of the app's repository")
-    icons = f"https://raw.githubusercontent.com/{new.owner}/{new.repo}/"
     if (new.data["icon_url"] and new.data["icon_url"] != old.data["icon_url"]
-            and not new.data["icon_url"].casefold().startswith(icons.casefold())):
+            and not in_repository(new.data["icon_url"], new)):
         reasons.append("the icon moves to an address outside the app's repository")
     return reasons

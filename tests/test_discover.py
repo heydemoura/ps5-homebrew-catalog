@@ -29,7 +29,7 @@ class FakeGitHub:
         self.releases_by_repo = {
             "Dev/Player": [{"tag_name": "v1.0", "assets": [ZIP], "published_at": "2026-09-01T00:00:00Z",
                             "body": ""}],
-            "Dev/Chess": [{"tag_name": "2.0", "assets": [dict(ZIP, name="Chess-PPSA07001.zip",
+            "Dev/Chess": [{"tag_name": "2.0", "assets": [dict(ZIP, name="Chess-FAKE07001.zip",
                                                                digest="sha256:" + "f" * 64)],
                            "published_at": "2026-09-02T00:00:00Z", "body": ""}],
             "Other/Desktop-Tool": [{"tag_name": "v3", "assets": [dict(ZIP, name="tool-win.zip")], "body": ""}],
@@ -88,7 +88,7 @@ class DiscoverTests(unittest.TestCase):
         self.assertEqual(found["Dev/Player"].status, "ready")
         self.assertEqual(found["Dev/Unreleased"].status, "unreleased")
         self.assertEqual(found["Dev/Chess"].status, "review")      # no param.json, but a title ID in the file name
-        self.assertIn("PPSA07001 in the release", found["Dev/Chess"].signals)
+        self.assertIn("FAKE07001 in the release", found["Dev/Chess"].signals)
         self.assertIn("developer of a candidate", found["Dev/Chess"].signals)
         self.assertEqual(found["Other/Desktop-Tool"].status, "not a native title")
 

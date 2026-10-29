@@ -1,14 +1,14 @@
 {
   "titleid": "PPSA99360",
-  "name": "PS5CEMU-HAR",
+  "name": "PS5-ECAM",
   "kind": "app",
   "category": "emulators",
-  "description": "Wii U and 3DS emulation for jailbroken PS5, built on Cemu and Azahar, with one launcher for both.",
+  "description": "Wii U, 3DS, DS and Switch emulation for jailbroken PS5, built on Cemu, Azahar, melonDS and Eden, with one launcher for all four.",
   "license": "GPL-3.0",
   "author": "premohq",
-  "version": "4.0.1",
-  "source_repo": "https://github.com/premohq/PS5CEMU-HAR",
-  "artifact_url": "https://github.com/premohq/PS5CEMU-HAR/releases/download/v4.0.1/PS5CEMU-HAR-v4.0.1.zip",
-  "sha256": "5d441d73957276e0d2f92bd2f56c70e33020a75483075aaf03cea9ae05028816",
-  "icon_url": "https://raw.githubusercontent.com/premohq/PS5CEMU-HAR/v4.0.1/sce_sys/icon0.png"
+  "version": "5.1.0",
+  "source_repo": "https://github.com/premohq/PS5-ECAM",
+  "artifact_url": "https://github.com/premohq/PS5-ECAM/releases/download/v5.1.0/PS5-ECAM-v5.1.0.zip",
+  "sha256": "c6a0c0b50617d923a5e7a5cb37d799c746118342cd850d5bca634c3670a6562f",
+  "icon_url": "https://raw.githubusercontent.com/premohq/PS5-ECAM/v5.1.0/sce_sys/icon0.png"
 }

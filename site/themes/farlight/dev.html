@@ -1,0 +1,16 @@
+<section class="portal" data-dev>
+  <a class="back" href="$base"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="app.back">All apps</span></a>
+  <p class="kicker" data-i18n="dev.kicker">Developer</p>
+  <h1 class="page__title" translate="no">$owner</h1>
+  $credit_line
+  <ul class="chips" aria-label="Developer facts" data-i18n-attr="aria-label:dev.facts">
+    <li data-i18n="n.apps" data-v-n="$app_total">$apps_label</li>
+    $downloads_chip
+    <li><a href="$owner_url" rel="nofollow" data-i18n="dev.profile">GitHub profile</a></li>
+  </ul>
+  <ul class="dev-apps">
+$apps
+  </ul>
+  <p class="article__note" data-i18n="dev.note">Version updates are made automatically when you publish a new release. To change anything else, press Edit listing: GitHub opens a pull request from your account. Downloads count every download of the listed file from GitHub across all versions, repeat installs and downloads outside the store included.</p>
+  <a class="cta" href="${base}submit/"><span class="cta__glyph" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span data-i18n="dev.add">Submit another app</span></a>
+</section>

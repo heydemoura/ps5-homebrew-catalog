@@ -70,8 +70,9 @@ The first twelve fields after `schema` are the app's record, exactly as in
 
 | Field | Type | Meaning |
 | --- | --- | --- |
+| `internalOnly` | boolean | Only present, and `true`, when the developer asks for the app to be installed on internal storage only. A store installs it there regardless of the user's chosen location. Absent means any location. |
 | `schema` | integer | Schema revision of this file; see [Versioning of the API](#versioning-of-the-api). |
-| `shared` (in `index.json` and `versions.json`) | array / object | Only present when apps share a title ID: the entries (or versions) of every app that is not the first to use its title ID. `apps` lists one app per title ID, as before, so a store released before shared title IDs keeps working. A client that knows shared title IDs reads both. |
+| `shared` (in `index.json` and `versions.json`) | array / object | Only present when apps share a title ID or use a prefix other than `PPSA` (such as `FAKE`): the entries (or versions) of every app that is not the first to use its title ID, and of every app whose title ID does not start with `PPSA`. `apps` lists one `PPSA` app per title ID, as before, so a store released before shared title IDs and custom prefixes keeps working. A client that knows shared title IDs reads both; one that does not know custom prefixes (ProsperoStore 1.000.101 to 1.000.109) rejects the whole index on meeting one, so such a store must be updated by hand. |
 | `id` | string | The app's identity in the catalog: its title ID, or `<TITLEID>-<owner>` for an app that shares its title ID with an earlier one. Use it for every address (`apps/<id>.json`, `icons/<id>.png`, `app/<id>/`) and as the key in `versions.json`. `titleid` is what the console knows the app as. |
 | `conflicts_with` | array of strings | The `id` of every other listed app with the same `titleid`; empty for almost every app. A console holds one app per title ID, so installing this one replaces those, and they share save data: warn before installing. |
 | `status` | string | `available`: the app has a release and can be installed. `coming_soon`: the title ID is [reserved](submitting.md#reserving-a-title-id) and nothing can be downloaded yet. `withdrawn`: the app was removed from the catalog in the last 30 days; the file then has only `schema`, `id`, `titleid` and `status`, and it is not in the index or the manifest. |
@@ -189,7 +190,9 @@ badge in lists.
       "released": "2026-10-01T01:50:46Z",
       "updated": "2026-10-01T04:17:55Z",
       "icon_small": "https://prosperostore.net/api/v1/icons/PPSA99002-256.png",
-      "icon_hash": "9f2c4d7e1a6b3c58"
+      "icon_hash": "9f2c4d7e1a6b3c58",
+      "owner": "BlackBearReloaded",
+      "downloads": 1234
     }
   ]
 }
@@ -201,6 +204,22 @@ fetch `apps/<TITLEID>.json` for the description, license, download and hash.
 `icon_hash` is there so a list can keep its icons; see [Caching icons](#caching-icons).
 `generated` and `commit` say which build of the catalog this is; `count` is the
 length of `apps`.
+
+`owner` is the GitHub account that owns the app's repository, spelled as GitHub
+spells it (the website's developer page for it is `/dev/<owner, lowercase>/`), and
+`null` for a reservation. Group a developer's apps by it, not by `author`, which is
+how the developer credits themselves and can be written two ways. Compare owners
+ignoring case.
+
+`downloads` is how many times GitHub has served the `.zip` files of the repository's
+releases, as of the build (the counts are read at most once a day), or `null` when it
+isn't known. It adds up every `.zip` asset of every release (not GitHub's automatic
+source-code archives, checksums or other files), so a new version keeps the total of
+the earlier ones instead of starting at zero, even when the file's name carries the
+version. It counts every download of those files, so reinstalls and downloads outside
+the store are in it: show it as "downloads", not as installs. When the list of releases can't be
+read, it falls back to the listed release's own count. It is only in the index: it
+changes every day, and an app's own file must not.
 
 `added` is when the catalog first listed the app (the first commit of its
 record), `null` when the build can't read the history. A list can use it for
@@ -467,6 +486,7 @@ site's header rules.
 | 3 | 2026-10-16 | Added `category` to app files (it is a record field) and index entries: the app's shelf, one of the keys in [Metadata format](metadata.md#categories). `schema` stays 3. |
 | 3 | 2026-10-05 | Added `release_notes` and `release_notes_truncated` to app files. `schema` stays 3: a released store accepts only that exact number, so it is raised with the next change that store has been prepared for. Test for the field, not for the number. |
 | 3 | 2026-10-18 | Added `id` and `conflicts_with` to app files and index entries: two different apps may share a title ID, and `id` tells them apart. `id` equals `titleid` for every app that has its title ID to itself, and `schema` stays 3. |
+| 3 | 2026-10-27 | Added `owner` and `downloads` to index entries: who an app is grouped under, and how many times its release file was downloaded. `schema` stays 3. |
 
 ## Where the values come from
 

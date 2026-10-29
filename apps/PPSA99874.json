@@ -1,14 +1,14 @@
 {
   "titleid": "PPSA99874",
-  "name": "PS5 Minecraft Java",
+  "name": "ProsperoCraft",
   "kind": "game",
   "category": "pc-ports",
-  "description": "Experimental Minecraft Java Edition server on a native PS5 OpenJDK 25 port; under development, with world startup still being validated.",
-  "license": null,
+  "description": "Minecraft Java runs natively on PS5 with a Native Java 25 Runtime. Java ownership required. GUI: mihawk-99/PS5_VKHomebrewUI; icons: MultiMC/Prism.",
+  "license": "GPL-3.0-or-later",
   "author": "mateo-cogeanu",
-  "version": null,
-  "source_repo": null,
-  "artifact_url": null,
-  "sha256": null,
-  "icon_url": null
+  "version": "01.000.121",
+  "source_repo": "https://github.com/mateo-cogeanu/ProsperoCraft",
+  "artifact_url": "https://github.com/mateo-cogeanu/ProsperoCraft/releases/download/01.000.121/PPSA99874.zip",
+  "sha256": "3ae5d35308bc84119ed0285869630153b2ee9c8ce054e098ce58d0c6851dafaf",
+  "icon_url": "https://raw.githubusercontent.com/mateo-cogeanu/ProsperoCraft/01.000.108/assets/branding/icon0.png"
 }

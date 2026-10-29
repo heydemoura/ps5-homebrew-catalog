@@ -2,7 +2,8 @@
 
 The store at <https://prosperostore.net/> is a static site generated from
 `apps/` by `python3 -m catalog build` and published to the repository's GitHub Pages site by GitHub
-Actions after every merge to `main`. There is no server-side code, database or tracking.
+Actions after every merge to `main`. There is no database or tracking, and no server-side code except an optional
+sign-in Worker for the submit page (see below).
 
 ## What the build produces
 
@@ -13,6 +14,8 @@ dist/
 ├── index.html                  the catalog: Discover, and a section each for apps, games, tools and coming soon
 ├── tv/                         TV mode: the catalog as a 10-foot interface
 ├── app/<ID>/                   one page per app (<ID> is the title ID, or <TITLEID>-<owner> when shared): download, install steps, sha256
+├── dev/<owner>/                one page per developer: their apps, downloads, likes, comments and an Edit listing button
+├── submit/                     the submit page: from a GitHub repository to a listing file and a pull request
 ├── api/v1/                     the store API: per-app files, index, versions, PNG icons, signed manifest
 ├── catalog/v1.json             the older single-file feed
 └── assets/                     content-hashed CSS, JS, WebP icons and each app's ambient picture
@@ -43,7 +46,8 @@ dist/
   makes on the console, by the same rules. A grey icon gets the theme's violet.
   It needs Pillow; without it every app gets the theme's own picture.
 - **Languages.** A flag at the top right (a button in TV mode's rail) changes the
-  page between English, Spanish, French, Portuguese, Japanese, German, Dutch and Turkish. Only the
+  page between English, Spanish, French, Portuguese, Japanese, German, Dutch, Turkish and
+  Simplified Chinese. Only the
   interface changes: its words, the names of the categories and kinds, dates and
   plurals. The records in `apps/` are never translated, so `category` stays
   `emulators` in the JSON and the page shows "Emuladores", "Émulateurs" and so on
@@ -78,7 +82,7 @@ dist/
 - Icons are fetched from `icon_url`, resized to 512 px WebP (when Pillow is
   installed) and served from the site, so visitors never hit the original host.
   The deploy job keeps them in a CI cache and fetches an icon again only when its
-  copy is older than a day, so a changed picture at the same address shows up
+  copy is older than an hour, so a changed picture at the same address shows up
   with the next deploy after that. A broken icon becomes a placeholder with a build warning.
 - Search waits for a pause in typing. A shelf shows at most 20 tiles; its
   section shows them all.
@@ -93,7 +97,9 @@ dist/
   fetch from: an app's page has Like and Comment buttons with their counts and
   the latest comments, every tile shows the app's likes and comments (zero
   included), Discover gets a ranked "Most liked" shelf once an app
-  has a like, and the sections can be ordered by "Most liked". TV mode shows
+  has a like, and the sections can be ordered by "Most liked". The same goes for "Most downloaded": a shelf
+  of the ten apps GitHub has served most (each with its place and its count) and an order, offered once the build knows the
+  counts. TV mode shows
   the counts on every tile and in an app's details with its latest comments,
   can order by "Most liked", and shows two QR codes there: one for the app's
   page, to download it, and one for its discussion, to like or comment. They
@@ -102,6 +108,42 @@ dist/
   no address is sent anywhere to make them. Everything is
   shown as plain text. Writing happens on GitHub, through the link on the page.
   When the files can't be read the page keeps only that link.
+- **Downloads** on an app's page and its developer's page are the `download_count` GitHub keeps for the
+  `.zip` files of the repository's releases, added up across every release (so a new version keeps the
+  total of the earlier ones, even when the file's name carries the version), read at build time with the
+  release facts (so at most a day old). It counts every download of those files from GitHub, repeat
+  installs and downloads outside the store included, so it is a rough sign of popularity and not the
+  number of consoles that have the app. GitHub's automatic source-code archives, checksums and other
+  non-ZIP files are not counted. Nothing is collected from the store or from visitors.
+- **Developer pages** (`/dev/<owner>/`, the owner of `source_repo`, lowercase) are public: there is no login.
+  Each lists the owner's apps with version, update date, downloads, likes and comments (the last two read like
+  the app page's) and an **Edit listing** button that opens `apps/<ID>.json` in GitHub's editor. An app's
+  developer name links to its page. Reservations have no owner, so no page.
+- **The submit page** (`/submit/`) turns a GitHub repository into a listing file and a pull request, in the
+  visitor's browser. It asks GitHub's API for the repository, its recent releases and the files of the release's tag, and
+  fetches `sce_sys/param.json` and the icon from raw.githubusercontent.com: the facts `python3 -m catalog draft` finds.
+  The developer chooses the release (the newest that has a file to list; if it lacks `param.json`, the next ones are
+  tried) and the file of that release, and fills in what needs judgement: type, category (only the ones that suit the
+  type), description (the repository's, or the README's first paragraph, as a start), name and license. The icon is
+  always a link: the repository's `sce_sys/icon0.png` at the tag when it exists, or one pasted (any PNG, JPEG or WebP
+  will do); the field is marked and the button stays off until there is a valid one. A repository that is already
+  listed is stopped, with a link to its developer page.
+  - *No `param.json` in the repository:* the page asks for the release's `.zip` from the developer's disk, reads it there
+    (its directory and `sce_sys/param.json`, inflated with the browser's `DecompressionStream`), and checks that its
+    SHA-256 equals the digest GitHub reports for one of the release's files. Nothing is uploaded. The browser can't read
+    the ZIP from GitHub itself, because the download's redirect sends no CORS headers.
+  - *Limits:* requests go without sign-in, which GitHub caps at 60 an hour per address; answers are kept for ten
+    minutes in the tab, and a check costs about three. The only address the content security policy allows besides
+    raw.githubusercontent.com is `https://api.github.com`. Nothing is sent to the site.
+  - *The pull request:* the button links to `…/new/main?filename=apps/<ID>.json&value=…`; GitHub forks the catalog for a
+    visitor without write access and opens the pull request from their account, which is what the checks require.
+    GitHub's editor shows the file on one line, which is valid JSON. The catalog's own checks run on it as on any
+    submission.
+  - *Sign in with GitHub* (optional): when GitHub's limit stops a check, the page offers to sign the developer in, which
+    raises it to 5,000 an hour. A small Cloudflare Worker ([`worker/github-login/`](../worker/github-login/README.md))
+    does the one step a browser can't, trading GitHub's code for a token. It asks for no permissions and keeps nothing;
+    the token lives in that tab's session storage. The button exists only when `GITHUB_LOGIN_URL` in `catalog/site.py`
+    is set.
 - The page of an app withdrawn in the last 30 days redirects to the front page,
   and its API file is replaced by one that says `"status": "withdrawn"`.
   A host can keep serving a file for a while after a deployment drops

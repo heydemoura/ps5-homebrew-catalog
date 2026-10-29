@@ -36,15 +36,23 @@ then reviews and merges it.
   repository is the simplest choice. The site and the store show icons at up
   to 512 px; a larger image is scaled down, and one that isn't square is
   cropped to a square on the website.
-- The pull request must come from the **account that owns the repository**. For
-  an organization's repository, your membership of that organization must be
+- The pull request should come from the **account that owns the repository**. To
+  list an app from someone else's repository, open it from your own account: the check passes
+  with a warning and the `third-party` label, and a maintainer approves it by hand (it is never merged automatically;
+  the developer's permission is not needed, but the license must allow redistribution). An app that is already listed can be
+  changed only by its owner, or by the account that listed it (again with manual approval). For an organization's repository, your membership of that organization must be
   [public](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-your-membership-in-organizations/publicizing-or-hiding-organization-membership).
 
 ## 1. Choose a title ID
 
 Your title ID is the app's permanent identity: the record's filename, the
 `titleId` in `sce_sys/param.json`, and the folder name on the console. It is
-four uppercase letters followed by five digits.
+four uppercase letters followed by five digits. `PPSA` is the usual prefix, but
+a custom one such as `FAKE77031` is accepted too (an older store, such as ProsperoStore before
+1.000.110, does not show it), as long as it isn't `CUSA`
+(PS4 titles) or `NPXS` (system titles); ShadowMountPlus skips `NPXS`. Digits in
+the letters part (`F4K377031`) aren't accepted, because ShadowMountPlus ignores
+such folders.
 
 - Check whether `apps/<TITLEID>.json` already exists. Title IDs are first come,
   first served. If it belongs to a different app, you can still list yours as
@@ -98,7 +106,18 @@ lowercase hexadecimal, without a `sha256:` prefix.
 
 ## 4. Write the record
 
-Fork this repository and add `apps/<TITLEID>.json`:
+**The quick way:** the [submit page](https://prosperostore.net/submit/) does steps 3 and 4 for
+you. Paste your repository and it reads your releases in your browser, takes the title ID and name from
+`sce_sys/param.json` at the release tag and the digest GitHub reports, and leaves you to choose the release and its
+file, the type, category and description. Its button opens the record in GitHub's editor, which forks this repository
+and opens the pull request from your account (the editor shows the file on one line; that is valid JSON).
+If the repository doesn't commit `sce_sys/param.json`, it asks for the release's `.zip` from your computer instead:
+the file is read in your browser, never uploaded, and its SHA-256 must match the one GitHub lists for that release
+file, so it is the real one. The icon is a link: the repository's `sce_sys/icon0.png` when it exists, or any image
+link you paste. GitHub lets a page make 60 requests an hour without sign-in; if you hit that, the page offers to sign
+you in with GitHub, which raises it, and asks for no permissions.
+
+**By hand:** fork this repository and add `apps/<TITLEID>.json`:
 
 ```json
 {
@@ -132,7 +151,8 @@ asset; it doesn't download the file.
 
 ## 6. Open the pull request
 
-Open it from the account that owns `source_repo`, changing only your one record.
+Open it from the account that owns `source_repo` (from another account it waits for a
+maintainer), changing only your one record.
 The **Validate submission** check reports every problem it finds in the job
 summary. Push fixes to the same branch; the check reruns automatically.
 
@@ -179,6 +199,10 @@ new pull request from the same account. That account must also own the
 
 ## Updating your app
 
+Your developer page, `https://prosperostore.net/dev/<your GitHub login>/`, lists your apps with their
+version, downloads, likes and comments, and an **Edit listing** button on each that opens its record in
+GitHub's editor to propose a change as a pull request.
+
 Usually nothing to do: the catalog checks for new releases every day and opens
 a pull request that moves your listing to the newest one (pre-releases
 included). For that to work, keep your asset name stable, or change only the
@@ -208,7 +232,7 @@ repository and publish a new release; the next scan picks it up, or you can
 | The release has several installable files | Attach one `.zip` of the app folder. Keep other files (`.elf` payloads, installers, source archives) out of the release, or name the app's file the way your README says. |
 | No `sce_sys/param.json` at the release tag | Commit `sce_sys/param.json` with your `titleId` and `contentVersion`. If your build generates it, commit a copy where the catalog can read it, at the root or in the folder the README names as the app. |
 | `param.json` is in a sample or test folder | Put the app's own `sce_sys/param.json` at the root, or point your README at the folder that holds the app. |
-| The title ID isn't a PS5 (`PPSA`) title ID | Use a `PPSA` plus five digits title ID, such as `PPSA01234`. |
+| The title ID is rejected | Use four uppercase letters plus five digits, such as `PPSA01234` or `FAKE77031`. `CUSA` (PS4) and `NPXS` (system) prefixes, digits among the letters (`F4K377031`) and lowercase aren't accepted. |
 | GitHub detects no license | Not an error: the app is listed as `Unlicensed`. Add a `LICENSE` file GitHub recognizes (such as `GPL-3.0` or `MIT`) to show it instead. |
 | No description to draft from | Add a repository description or a short README paragraph saying what the app does. |
 | Native, but no release yet | Publish your first release as above. Only you can do that. |
@@ -222,7 +246,8 @@ A `.ffpkg` or `.ffpfsc` image isn't accepted yet; use a `.zip`
 
 | Message contains | Fix |
 | --- | --- |
-| `does not own` | Open the PR from the repository owner's account, or make your organization membership public. |
+| `does not own` (warning) | You don't own `source_repo`: a maintainer must approve the pull request by hand. Open it from the owner's account, or make your organization membership public, to avoid the wait. |
+| `only its owner or the account` | The app is already listed; only the owner of its repository, or the account that listed it, can change it. |
 | `sha256 does not match` | Recompute the digest of the exact asset in `artifact_url`. |
 | `artifact_url must be` | Link a specific release asset ending in `.zip`. |
 | `version must match the release tag` | Set `version` to the tag in `artifact_url`, optionally without its leading `v`. |

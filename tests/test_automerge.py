@@ -63,7 +63,7 @@ class BumpReasonsTests(unittest.TestCase):
                          ["the record is not a regular file"])
 
     def test_a_change_beyond_the_release_is_left_for_a_maintainer(self):
-        for fields in ({"name": "Another Name"}, {"author": "Someone"}, {"kind": "game"}, {"license": "MIT"}):
+        for fields in ({"name": "Another Name"}, {"author": "Someone"}, {"kind": "game"}):
             with self.subTest(fields=fields):
                 new = self.load("changed", record(**{**NEW, **fields}))
                 self.assertIn("more than the release", self.reasons(new=new)[0])
@@ -72,6 +72,19 @@ class BumpReasonsTests(unittest.TestCase):
         new = self.load("changed", record(**{**NEW, "description": "Another sentence about the app."}))
         self.assertEqual(self.reasons(new=new), [])
         self.assertEqual(self.reasons(new=new, author="stranger"), ["@stranger does not own example/example-app"])
+
+    def test_a_new_license_is_merged_only_for_the_owner(self):
+        new = self.load("changed", record(**{**NEW, "license": "MIT"}))
+        self.assertEqual(self.reasons(new=new), [])
+        self.assertEqual(self.reasons(new=new, author="stranger"), ["@stranger does not own example/example-app"])
+
+    def test_the_owner_may_correct_the_license_of_the_release_already_listed(self):
+        old = self.load("old", record(**NEW))
+        new = self.load("new", record(**{**NEW, "license": "MIT"}))
+        self.assertEqual(self.reasons(old=old, new=new), [])
+        self.assertEqual(self.reasons(old=old, new=new, author="stranger"),
+                         ["@stranger does not own example/example-app"])
+        self.assertEqual(self.reasons(old=old, new=old), ["it does not point at a new file"])
 
     def test_a_release_that_is_not_the_newest_is_left_for_a_maintainer(self):
         self.assertIn("not the newest", self.reasons(hub=github(newest="01.000.020"))[0])
@@ -83,11 +96,37 @@ class BumpReasonsTests(unittest.TestCase):
         reasons = self.reasons(icon_url="https://raw.githubusercontent.com/other/place/main/icon0.png")
         self.assertEqual(reasons, ["the icon moves to an address outside the app's repository"])
 
+    def test_an_icon_through_github_dot_com_raw_of_the_same_repository_is_merged(self):
+        base = "https://github.com/example/example-app/raw/01.000.010/sce_sys/icon0.png"
+        self.assertEqual(self.reasons(icon_url=base), [])
+        self.assertEqual(self.reasons(icon_url=base.replace("example/example-app", "other/place")),
+                         ["the icon moves to an address outside the app's repository"])
+        self.assertEqual(self.reasons(icon_url=base.replace("/raw/", "/blob/")),
+                         ["the icon moves to an address outside the app's repository"])
+
     def test_a_reservation_and_an_unreadable_record_are_left_for_a_maintainer(self):
         held = self.load("held", reservation(titleid="PPSA01234"))
-        self.assertEqual(self.reasons(old=held), ["it changes a reservation"])
+        self.assertEqual(self.reasons(old=held, new=held), ["it changes a reservation"])
         self.assertEqual(bump_reasons("example", MODIFIED, None, None, github()),
                          ["the listed or the proposed record could not be read"])
+
+    def test_the_holder_releasing_their_reservation_is_merged(self):
+        held = self.load("held", reservation(titleid="PPSA01234"))
+        new = self.load("new", record(**NEW))
+        self.assertEqual(bump_reasons("example", MODIFIED, held, new, github(), "example"), [])
+        self.assertEqual(bump_reasons("Example", MODIFIED, held, new, github(), "example"), [])
+
+    def test_a_reservation_released_by_someone_else_or_unknown_is_left_for_a_maintainer(self):
+        held = self.load("held", reservation(titleid="PPSA01234"))
+        new = self.load("new", record(**NEW))
+        self.assertEqual(bump_reasons("example", MODIFIED, held, new, github(), "other"),
+                         ["the title ID is reserved by @other, not @example"])
+        self.assertEqual(bump_reasons("example", MODIFIED, held, new, github(), None),
+                         ["could not determine who reserved the title ID"])
+        self.assertEqual(bump_reasons("example", MODIFIED, held, new, github(newest="01.000.020"), "example"),
+                         ["the release is not the newest of example/example-app"])
+        self.assertEqual(bump_reasons("stranger", MODIFIED, held, new, github(), "stranger"),
+                         ["@stranger does not own example/example-app"])
 
     def test_a_github_failure_is_left_for_a_maintainer(self):
         hub = github()

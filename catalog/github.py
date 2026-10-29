@@ -79,6 +79,16 @@ class GitHub:
     def releases(self, owner: str, name: str) -> list[dict]:
         return self._get(f"/repos/{quote(owner)}/{quote(name)}/releases?per_page=20") or []
 
+    def all_releases(self, owner: str, name: str, max_pages: int = 10) -> list[dict]:
+        """Every release of a repository, newest first, paged 100 at a time (at most max_pages requests)."""
+        found: list[dict] = []
+        for page in range(1, max_pages + 1):
+            batch = self._get(f"/repos/{quote(owner)}/{quote(name)}/releases?per_page=100&page={page}") or []
+            found.extend(batch)
+            if len(batch) < 100:
+                break
+        return found
+
     def commit_author(self, repository: str, sha: str) -> str | None:
         """GitHub login of a commit's author, or None when it isn't linked to an account."""
         commit = self._get(f"/repos/{repository}/commits/{quote(sha)}") or {}

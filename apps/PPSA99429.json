@@ -3,12 +3,12 @@
   "name": "ApricotGS",
   "kind": "game",
   "category": "console-ports",
-  "description": "Native PS5 player for two RPG editions with 3D selection and early private gameplay. Public preparation and release are in progress; users supply their own game data.",
-  "license": null,
+  "description": "Play supported German HeartGold and SoulSilver dumps on PS5. Add your own .nds file; the app prepares it locally and keeps separate saves. No game data included.",
+  "license": "GPL-3.0+ AND LGPL-2.1+ AND MIT AND CC-BY-4.0 AND OFL-1.1",
   "author": "BaZZtian",
-  "version": null,
-  "source_repo": null,
-  "artifact_url": null,
-  "sha256": null,
-  "icon_url": null
+  "version": "00.040.005",
+  "source_repo": "https://github.com/BaZZtian/PS5-ApricotGS",
+  "artifact_url": "https://github.com/BaZZtian/PS5-ApricotGS/releases/download/v00.040.005/ApricotGS-v00.040.005-PS5.zip",
+  "sha256": "4149b6a58ffc5948edf59918f05219a55c0deb33a25b52c92674490e07c83113",
+  "icon_url": "https://raw.githubusercontent.com/BaZZtian/PS5-ApricotGS/33eee4f082c7b25d66f45fd54c4aad0d1a5f0ec1/sce_sys/icon0.png"
 }

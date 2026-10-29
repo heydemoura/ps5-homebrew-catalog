@@ -17,7 +17,7 @@ substituted.
 
 Icons are fetched and re-served from the site, resized to WebP when Pillow is
 installed. With an icon cache directory, an icon is fetched again only when its
-cached copy is older than a day (an icon URL may name a branch, where the file
+cached copy is older than an hour (an icon URL may name a branch, where the file
 can change); entries no longer used are pruned. A failed icon falls back to a placeholder instead of failing the
 build.
 """
@@ -70,6 +70,15 @@ DEFAULT_THEME = "farlight"
 FORMAT_LABELS = {"zip": "ZIP folder", "ffpkg": "FFPKG image", "ffpfsc": "FFPFSC image"}
 KIND_LABELS = {"app": "App", "game": "Game", "tool": "Tool"}
 KIND_PLURALS = {"app": "Apps", "game": "Games", "tool": "Tools"}
+# Where the optional "Sign in with GitHub" of the submit page lives (worker/github-login/README.md).
+# Empty: the submit page has no sign-in and the limit of GitHub's API without one (60 an hour) applies.
+GITHUB_LOGIN_URL = "https://prosperostore-login.darkxex.workers.dev"
+# The categories the submit page offers for each kind (what the listed apps do; the check doesn't enforce it).
+KIND_CATEGORIES = {
+    "app": ("emulators", "streaming", "video", "music", "ai", "utilities"),
+    "game": ("console-ports", "pc-ports", "homebrew-games"),
+    "tool": ("utilities", "tools", "showcases"),
+}
 
 
 def e(value) -> str:
@@ -361,7 +370,7 @@ def png_icons(data: bytes) -> dict[int, bytes]:
     return icons
 
 
-ICON_MAX_AGE = 24 * 60 * 60  # seconds a cached original is used before it is fetched again
+ICON_MAX_AGE = 60 * 60  # seconds a cached original is used before it is fetched again
 
 
 def _icon(url: str, cache: Path | None, fetch=None) -> tuple[bytes, str, bytes]:
@@ -502,7 +511,7 @@ def write_api(root: Path, url: str, records: list[Record], report: Report, *, up
 
     Per-app files and the version map hold nothing that changes between builds
     of the same catalog, so an unchanged app keeps its ETag and costs clients a
-    304. Only the index carries the build's commit and time.
+    304. Only the index carries the build's commit and time, and the download counts.
     """
     from . import facts as release_facts
     from . import notes as release_notes
@@ -564,12 +573,21 @@ def write_api(root: Path, url: str, records: list[Record], report: Report, *, up
         entry = ({key: app[key] for key in (
             "id", "titleid", "status", "conflicts_with", "name", "kind", "category", "author", "version", "content_version", "format", "size",
             "released", "updated", "added", "icon_small", "icon_hash")}
-            | {"sandbox": ((safety or {}).get(rid) or {}).get("sandbox")})
+            | {"sandbox": ((safety or {}).get(rid) or {}).get("sandbox"),
+               # Who the apps are grouped under (the website's developer pages): the owner of the repository, as
+               # GitHub spells it; null for a reservation, which has no repository yet.
+               "owner": None if record.reserved else record.owner,
+               # How many times GitHub served the listed file. It moves every day, so it is in the index, which
+               # changes with every build anyway, and not in the app's own file, which keeps its ETag.
+               "downloads": facts.downloads})
         # A store released before shared title IDs refuses an index with a title ID twice and a
-        # versions file with a key that isn't a title ID, so the apps that share one go in "shared".
-        (index if record.id == record.titleid else shared_index).append(entry)
+        # versions file with a key that isn't a title ID, and one released before custom prefixes
+        # refuses a title ID that doesn't start with PPSA (it then loads no catalog at all). The apps
+        # that share a title ID, or use another prefix, go in "shared", which those stores skip.
+        in_apps = record.id == record.titleid and record.titleid.startswith("PPSA")
+        (index if in_apps else shared_index).append(entry)
         if not record.reserved:
-            (versions if record.id == record.titleid else shared_versions)[rid] = {
+            (versions if in_apps else shared_versions)[rid] = {
                 "content_version": facts.content_version, "version": d["version"]}
     _write_json(root / "index.json", {
         "schema": API_SCHEMA, "generated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -610,6 +628,7 @@ def build_site(out: Path, apps_dir: Path, report: Report, base: str = DEFAULT_BA
     own = {name: theme_obj.directory / name for name in ("app.js", "favicon.svg")}
     js = assets.add("app", "js", (own["app.js"] if own["app.js"].is_file() else shared_dir / "app.js").read_bytes())
     i18n = assets.add("i18n", "js", (shared_dir / "i18n.js").read_bytes())
+    analytics = assets.add("analytics", "js", (shared_dir / "analytics.js").read_bytes())
     placeholder = assets.add("placeholder", "svg", (shared_dir / "placeholder.svg").read_bytes())
     shutil.copyfile(own["favicon.svg"] if own["favicon.svg"].is_file() else shared_dir / "favicon.svg",
                     root / "favicon.svg")
@@ -759,6 +778,9 @@ def build_site(out: Path, apps_dir: Path, report: Report, base: str = DEFAULT_BA
                 'save data.</p>')
         return chip, note
 
+    def dev_url(record: Record) -> str:
+        return f"{base}dev/{record.owner.casefold()}/"
+
     def app_values(record: Record, number: int) -> dict:
         d = record.data
         shared_chip, shared_note = shared_id(record)
@@ -777,8 +799,17 @@ def build_site(out: Path, apps_dir: Path, report: Report, base: str = DEFAULT_BA
             ambient=e(ambients.get(record.id, "")),
             accent=e(accents.get(record.id, "")),
             size_label=e(size_label(known[record.id][0].size)),
+            author_html=e(d["author"]),
+            downloads_chip="",
+            downloads_row="",
         )
         if not record.reserved:
+            values["author_html"] = f'<a href="{e(dev_url(record))}">{e(d["author"])}</a>'
+            count = known[record.id][0].downloads
+            if count is not None:
+                values["downloads_chip"] = (f'<li data-i18n="n.downloads" data-v-n="{count}">'
+                                            f'{count} download{"" if count == 1 else "s"}</li>')
+                values["downloads_row"] = (f'<div><dt data-i18n="d.downloads">Downloads</dt><dd>{count}</dd></div>')
             fmt = artifact_format(record)
             values.update(
                 source_short=e(f"{record.owner}/{record.repo}"),
@@ -822,6 +853,8 @@ def build_site(out: Path, apps_dir: Path, report: Report, base: str = DEFAULT_BA
                 # tells new apps from updated ones with them, not with the record's last change.
                 f' data-added="{e(_utc(added.get(record.path.name)) or "")}"'
                 f' data-released="{e(known[record.id][0].released or "")}"'
+                # How many times GitHub has served the release file; the attribute is absent when it is unknown.
+                + ('' if known[record.id][0].downloads is None else f' data-downloads="{known[record.id][0].downloads}"')
             )
             name = template.replace(".html", "-soon.html") if record.reserved else template
             rendered.append(theme_obj.render(name, values))
@@ -831,10 +864,13 @@ def build_site(out: Path, apps_dir: Path, report: Report, base: str = DEFAULT_BA
         "base": base,
         "repo": REPO_URL,
         "comments_url": COMMENTS_URL,
-        "submit_url": f"{REPO_URL}/blob/main/docs/submitting.md",
+        # The submit page when the theme has one; otherwise the guide.
+        "submit_url": f"{base}submit/" if theme_obj.template("submit.html") else f"{REPO_URL}/blob/main/docs/submitting.md",
+        "guide_url": f"{REPO_URL}/blob/main/docs/submitting.md",
         "css": css,
         "js": js,
         "i18n": i18n,
+        "analytics": analytics,
         "fonts": e(FONT_URL.format(families=theme_obj.fonts)),
         "theme_color": theme_obj.color,
         "commit": e(commit),
@@ -886,6 +922,52 @@ def build_site(out: Path, apps_dir: Path, report: Report, base: str = DEFAULT_BA
                    canonical=site_url + page_url(record),
                    body=theme_obj.render("app-soon.html" if record.reserved else "app.html", values),
                    og_image=site_url + icons[record.id], page_class="page-app")
+
+    # Submit page: a form that reads the developer's repository in the browser (site/shared/submit.js).
+    submit_template = theme_obj.template("submit.html")
+    if submit_template:
+        category_options = "".join(f'<option value="{key}" data-i18n="cat.{key}">{e(label)}</option>'
+                                   for key, label in CATEGORIES.items())
+        kind_options = "".join(f'<option value="{kind}" data-i18n="kind.{kind}">{e(KIND_LABELS[kind])}</option>'
+                               for kind in KINDS)
+        submit_js = assets.add("submit", "js", (shared_dir / "submit.js").read_bytes())
+        write_page(root / "submit" / "index.html", title="Submit an app — PS5 Homebrew Store",
+                   description="Prepare the listing of your native PS5 app from its GitHub repository and open the pull request.",
+                   canonical=site_url + base + "submit/", page_class="page-submit",
+                   body=submit_template.substitute(shared, submit_js=submit_js, category_options=category_options,
+                                                   kind_options=kind_options, catalog_url=f"{base}catalog/v1.json",
+                                                   kind_categories=e(json.dumps(KIND_CATEGORIES, separators=(",", ":"))),
+                                                   login_url=e(GITHUB_LOGIN_URL)))
+
+    # One public page per developer: their listed apps, how they are doing, and the way to edit a listing.
+    dev_template, dev_app_template = theme_obj.template("dev.html"), theme_obj.template("dev-app.html")
+    if dev_template and dev_app_template:
+        owners: dict[str, list[Record]] = {}
+        for record in releases:
+            owners.setdefault(record.owner.casefold(), []).append(record)
+        for key, group in owners.items():
+            owner = group[0].owner
+            rows = []
+            for record in group:
+                values = numbered[record.id]
+                count = known[record.id][0].downloads
+                rows.append(dev_app_template.substitute(
+                    values, edit_url=e(f"{REPO_URL}/edit/main/apps/{record.id}.json"),
+                    downloads_html="—" if count is None else str(count)))
+            known_counts = [known[r.id][0].downloads for r in group if known[r.id][0].downloads is not None]
+            total_downloads = sum(known_counts)
+            names = sorted({r.data["author"] for r in group}, key=str.casefold)
+            credit = "" if [n.casefold() for n in names] == [owner.casefold()] else \
+                f'<p class="page__line" translate="no">{e(", ".join(names))}</p>'
+            write_page(root / "dev" / key / "index.html", title=f"{owner} — PS5 Homebrew Store",
+                       description=f"{len(group)} native PS5 app(s) by {owner} in the PS5 Homebrew Store.",
+                       canonical=f"{site_url}{base}dev/{key}/", page_class="page-dev",
+                       body=dev_template.substitute(
+                           shared, owner=e(owner), owner_url=e(f"https://github.com/{owner}"), credit_line=credit,
+                           apps="\n".join(rows), app_total=str(len(group)),
+                           apps_label=f"{len(group)} app{'' if len(group) == 1 else 's'}",
+                           downloads_chip=(f'<li data-i18n="n.downloads" data-v-n="{total_downloads}">{total_downloads} '
+                                           f'download{"" if total_downloads == 1 else "s"}</li>' if known_counts else "")))
 
     # TV mode: a 10-foot interface for the PS5 browser, drawn by tv.js from data embedded in the page.
     tv_template = theme_obj.template("tv.html")
@@ -972,9 +1054,11 @@ def build_site(out: Path, apps_dir: Path, report: Report, base: str = DEFAULT_BA
               added=added, news=news_items)
 
     # Header and redirect rules, for a host that reads _headers and _redirects; GitHub Pages ignores them.
-    csp = ("default-src 'self'; img-src 'self' data:; style-src 'self' https://fonts.googleapis.com; "
-           "font-src https://fonts.gstatic.com; script-src 'self'; "
-           "connect-src 'self' https://raw.githubusercontent.com https://translate.googleapis.com; "
+    csp = ("default-src 'self'; img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com; "
+           "style-src 'self' https://fonts.googleapis.com; "
+           "font-src https://fonts.gstatic.com; script-src 'self' https://www.googletagmanager.com; "
+           "connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://translate.googleapis.com "
+           "https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; "
            "base-uri 'self'; form-action 'none'; frame-ancestors 'none'")
     (out / "_headers").write_text(f"""/*
   X-Content-Type-Options: nosniff
